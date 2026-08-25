@@ -1,0 +1,11 @@
+node_modules/
+models/
+generated/
+repaired/
+repaired-v5/
+real-seed/
+PLAN.md
+MODEL_CARD.md
+upload_hf.sh
+*.gguf
+.DS_Store

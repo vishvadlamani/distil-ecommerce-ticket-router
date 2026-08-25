@@ -1,0 +1,17 @@
+{
+  "name": "distil-ecommerce-ticket-router",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build-seeds": "bun scripts/build_seeds.ts",
+    "demo": "bun scripts/demo.ts",
+    "eval": "bun scripts/eval.ts --model ecom-router-1.7b-v5",
+    "eval-real": "bun scripts/eval_real.ts --model ecom-router-1.7b-v5",
+    "repair-data": "bun scripts/repair_training_data.ts",
+    "build-v5-dataset": "bun scripts/build_v5_dataset.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}
