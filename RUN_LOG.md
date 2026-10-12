@@ -221,3 +221,17 @@ run follows. Things we hit that belong in those docs or in the platform:
   - Qwen3-1.7B -> **SLM c1fa3d30-475a-4436-bbca-8833d178563f**
   - Qwen3-0.6B -> **SLM fc8a659a-fdb5-4159-b507-10ed97528946**
   2 `slms_from_datasets_post` credits (3 left).
+- Full-set audit detail (10,042 generated rows, 7.47 MB; job 07:52 to 09:35, 82 iterations, 0 x 402): hard-rule rows 4
+  (0.04%: 2 prev>=2 labelled no_action on injection-style tickets, 1 escalate with needs_human false, 1 id not verbatim
+  in a row with a broken metadata block), template defects 75 (0.7%: `""` fences, `Body: ` with a trailing space, 11
+  rows without a parseable metadata block), soft flags 14 (12 processing cancellations escalated with a stated reason,
+  2 automated actions with needs_human true). August's dataset: ~13% of rows broke a rule and needed the repair script.
+  Trained as generated: no row removed or rewritten.
+- Distribution (`results/full-97b42e81/distribution.txt`): every intent >= 393 rows (sizing_fit 393, product_question 424;
+  refund_status 1,713, order_status 1,527, other 1,399 largest). Boundaries: post-ship cancellation 325/325 escalate,
+  processing cancellation 312 cancel_order / 29 escalate; returns and exchanges within 35 d 892 automated / 33 escalate,
+  past 35 d 298/298 escalate; account_access 188 send_password_reset / 393 escalate (the smoke-1 gap is closed).
+  Coverage: ~14% non-English, ~7% injection-like, 25% no subject, 340 rows (3.4%) where the text quotes a different id than
+  the metadata, 0 seed bodies copied, 34 duplicate bodies (metadata-flip pairs), needs_human 35.5%.
+- Risk noted for the student read-out: billing_issue is 475 answer_from_faq vs 108 escalate_to_billing (the balance
+  instruction over-corrected toward FAQ); the test set splits billing 50/50. Watch test rows #18 and #32.
