@@ -92,3 +92,18 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   Side branch: the full run goes on the parent 85bcc9fb, never on the smoke child.
 - Gate: download ed14b487, audit rows after the first 115 (the parent's seeds) with
   `bun scripts/check_sample.ts <train.jsonl> --skip 115`. Hard-violation rate must be near zero.
+- Smoke result (07:00 UTC, job ran 06:59:26 to 07:00:16, 50 s for 148 rows in 5 iterations of 32):
+  `rows=148 bad_json=0 bad_schema=0 HARD violations 0 (0.0%) SOFT flags 0 FORMAT issues 2 (1.4%)` (one fence written
+  as `""`, one duplicated `days_since_order` line). Evidence: `results/smoke-ed14b487/{generated_rows.jsonl,audit.txt}`.
+- Boundaries all correct in the sample: cancellation processing x5 -> cancel_order, shipped/in_transit x6 -> escalate;
+  return/exchange <=28 d -> automated (one 21 d escalation with a stated reason), 41-52 d -> escalate x4; order_status
+  processing 2-7 d -> tracking x10, 9-12 d -> escalate x6. Manual read of 14 random rows: 14/14 labels correct.
+- Coverage: intents order_status 29, refund_status 14, damaged_item 13, cancellation 11, exchange 10, sizing_fit 10,
+  account_access 10, delivery_issue 9, return_request 9, product_question 8, billing_issue 7, other 18 (no skew toward
+  `other` despite 45/115 `other` seeds); ~14% non-English, 6% injection-like, 30% no subject, 4 text-vs-metadata id
+  conflicts, 0 seed bodies copied; order_id null 42 / from text 72 / from metadata 34.
+- Gap: account_access 10/10 escalate_to_agent, 0 send_password_reset (seeds carry 1 such row in 12). Fix before the
+  full run: VARIETY paragraph now asks for both sides of account_access, billing_issue, delivery_issue, cancellation,
+  returns and exchanges in balance; template paragraph now says exactly three quote characters and each metadata line
+  once. The smoke-1 instructions are at commit 0c6c1f7; the revised ones go in as a `--job-description` override
+  on the same parent 85bcc9fb (smoke 2, then the full run), so the generated dataset carries the revised text.
