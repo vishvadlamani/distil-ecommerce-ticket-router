@@ -145,3 +145,18 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   **TeacherEvaluation b153e39f-e24f-4cc6-aa44-cdf3fc5645f7** (07:43:26; 1 credit; 3 left).
 - Smoke 2 re-run: `distil dataset generate-synthetic-data-train --smoke --output json --job-description platform-v6/job_description.json 85bcc9fb-...`
   -> **smoke Dataset 0c718c71-2848-486a-a133-74da1c809276** (1 smoke credit; 17 left). Watcher gate adds: zero 402 lines in the job log.
+
+### Step 3 result: teacher evaluation b153e39f (2026-10-12 07:46 UTC)
+
+- Job ran 07:46:24 to 07:46:49 (64 rows in 7 s), 0 x 402, 0 warnings. Platform metrics:
+  `rouge 0.929, binary 0.609, llm-as-a-judge 0.734, llm-as-a-judge-reference-free 0.891`.
+- Local field-level scorer (`scripts/score_predictions.ts`, the judge's rules), 95% Wilson:
+  curated **22/24 = 91.7% [74.2, 97.7]**, real **25/40 = 62.5% [47.0, 75.8]**, blended **47/64 = 73.4% [61.5, 82.7]**;
+  JSON valid 64/64. The platform judge agrees on every slice (91.7 / 62.5 / 73.4), so local = platform, as in August.
+- Against the August teacher (gpt-oss-120b): curated 75.0% -> 91.7% (+4 rows), real 60.0% -> 62.5% (+1), blended 42/64 -> 47/64.
+- Misses (full list in `results/teacher-eval-b153e39f/score.txt`): curated #17 (wrong person's parcel: send_replacement/false
+  vs escalate/true) and #19 (card declined at checkout: escalate_to_billing vs answer_from_faq; rule 10 of the generation
+  instructions covers it, but the evaluation sees only task_description). Real slice: 15 misses, mostly `other` chosen
+  over product_question / damaged_item / billing_issue / cancellation on tweets, Twitter handles copied as order ids
+  (#39 "@116245", #41 "115821"), needs_human false on rants, and 3 action-table breaks (answer_from_faq for order_status
+  on #24, #39, #45). Those are the out-of-domain rows that the 60 real seeds exist for.
