@@ -107,3 +107,13 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   returns and exchanges in balance; template paragraph now says exactly three quote characters and each metadata line
   once. The smoke-1 instructions are at commit 0c6c1f7; the revised ones go in as a `--job-description` override
   on the same parent 85bcc9fb (smoke 2, then the full run), so the generated dataset carries the revised text.
+
+### Step 2b / 3: smoke 2 and teacher evaluation (2026-10-12 07:17 UTC)
+
+- `distil dataset generate-synthetic-data-train --smoke --output json --job-description platform-v6/job_description.json 85bcc9fb-...`
+  -> **smoke-2 Dataset dea53daf-d796-4eb1-86dc-f28e87a09a0e** (parent 85bcc9fb, revised instructions as override, 1 smoke credit; 18 left).
+- `distil teacher-evaluation create-from-dataset --output json 85bcc9fb-...` -> **TeacherEvaluation 3cb7da8c-5a5f-4f15-a279-02ed8b3172de**
+  (teacher and judge `zai.glm-5.3-low-thinking`, 1 few-shot from train, 64-row test; 1 `teacher_evaluations_post` credit; 4 left).
+- Watchers: smoke 2 -> download, `check_sample.ts --skip 115`, gate (bad_json=0, bad_schema=0, hard-violation rows <= 2%,
+  format rows <= 3%) -> on PASS launch the full run on parent 85bcc9fb with the same `--job-description` override.
+  Teacher eval -> `metrics`, `download-predictions` into `results/teacher-eval-3cb7da8c/`, `score_predictions.ts --misses`.
