@@ -177,6 +177,9 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
 
 ## Feedback for distil labs (running list; turned into a note for Jacek at the end of the run)
 
+Rule (user, 2026-10-12): nothing is filed on distil labs' public repo. This list is for a private note to Jacek,
+sent with the results only once each item is confirmed real (reproduced, not observed once) and the run's numbers exist.
+
 Their docs and the `distil-cli` skill (v10.0.3, public at github.com/distil-labs/distil-cli-skill) are the reference this
 run follows. Things we hit that belong in those docs or in the platform:
 
