@@ -242,3 +242,57 @@ run follows. Things we hit that belong in those docs or in the platform:
   call is running, which kills detached processes; a background tool task keeps it alive (the generation watcher ran
   1.5 h that way). The pipeline now runs as a background tool task (2 h cap, relaunched by the check-ins if needed),
   and stage E starts by deleting any deployment left running by an interrupted run. Trainings still JOB_RUNNING.
+- **Qwen3-1.7B (SLM c1fa3d30-475a-4436-bbca-8833d178563f)** finished 2026-10-12T12:02:48Z. Platform metrics (`results/slm-c1fa3d30-475a-4436-bbca-8833d178563f/metrics.json`): base judge 0.328 / ref-free 0.375 | tuned judge 0.703 / ref-free 0.812 / binary 0.656
+  Local scorer (`results/slm-c1fa3d30-475a-4436-bbca-8833d178563f/score.txt`):
+  [tuned Qwen3-1.7B] curated correct 22/24 = 91.7% [74.2, 97.7] | json 24/24 | intent 95.8% order_id 100.0% needs_human 95.8% urgency±1 95.8% action_ok 95.8% | platform judge 91.7%
+  [tuned Qwen3-1.7B] real    correct 23/40 = 57.5% [42.2, 71.5] | json 40/40 | intent 77.5% order_id 97.5% needs_human 80.0% urgency±1 87.5% action_ok 87.5% | platform judge 57.5%
+  [tuned Qwen3-1.7B] blended correct 45/64 = 70.3% [58.2, 80.1] | json 64/64 | intent 84.4% order_id 98.4% needs_human 85.9% urgency±1 90.6% action_ok 90.6% | platform judge 70.3%
+    FAIL #03 curated "any update on my delivery? nothing has arrived yet": intent order_status vs delivery_issue; urgency 2 vs 4 (off by 2); action send_tracking_link vs open_carrier_investigation (not allowed for delivery_issue)
+    pass #16 curated "screen on the digital frame arrived cracked right out of the": sentiment neutral vs frustrated
+    FAIL #17 curated "Received someone else's order": needs_human false vs true; sentiment frustrated vs neutral; action send_replacement vs escalate_to_agent (allowed)
+    FAIL #24 real    "Hii i bought a psn card like 1 hour ago but the status still": action answer_from_faq vs send_tracking_link (not allowed for order_status)
+    FAIL #26 real    "I want the seriously annoying emails about items I have view": intent other vs account_access; sentiment angry vs frustrated
+    pass #27 real    "Our Airstream Topper is amazingly comfy &amp; cooler than me": sentiment positive vs neutral
+    FAIL #31 real    "Did you know your own brand bath foam doesn't leave any perf": intent product_question vs other; urgency 2 vs 1 (within 1); action answer_from_faq vs no_action (not allowed for other)
+    FAIL #34 real    "your Express store on Romford Road in London are keeping all": intent product_question vs other; sentiment angry vs neutral; urgency 2 vs 1 (within 1); action answer_from_faq vs no_action (not allowed for other)
+    FAIL #36 real    "Wow Dept.: GMgr kept giving me 20 hours/week when I repeated": needs_human true vs false; urgency 2 vs 1 (within 1); action escalate_to_agent vs no_action (allowed)
+    FAIL #38 real    "prev hd ordrd seinhzr earphones hd to replace, a strolley da": intent other vs damaged_item; urgency 2 vs 3 (within 1)
+    FAIL #39 real    "So @116245 have already taken my £45 for a game that doesn't": intent billing_issue vs order_status; needs_human true vs false; action escalate_to_billing vs send_tracking_link (not allowed for order_status)
+    FAIL #41 real    "Compré un #ajedrez  por @115821.Moderno,vino con 2 reinas y ": intent other vs damaged_item; order_id @115821 vs null; urgency 2 vs 4 (off by 2)
+    FAIL #43 real    "AMAZON IS THE COMPANY OF MOTHERFUCKERS, BUYERS NEED TO PAY F": needs_human false vs true; urgency 1 vs 2 (within 1); action no_action vs escalate_to_agent (allowed)
+    FAIL #45 real    "your garbage service can't even deliver a package when I got": needs_human false vs true; urgency 2 vs 4 (off by 2); action send_tracking_link vs escalate_to_agent (allowed)
+    FAIL #50 real    "Your Filipino call centers are THE GATES OF HELL!  FIVE HOUR": urgency 2 vs 4 (off by 2)
+    FAIL #51 real    "- and the chicken is a little pink 😱 #salmonella https://t.": intent other vs damaged_item; needs_human false vs true; sentiment neutral vs frustrated; urgency 1 vs 4 (off by 3); action no_action vs escalate_to_agent (not allowed for damaged_item)
+    FAIL #57 real    "need help 2 cancel Sling tv from my fire stick, moving and n": needs_human true vs false; action escalate_to_agent vs cancel_order (allowed)
+    FAIL #58 real    "who are the winners of #amazonsaletrail contest held on app ": needs_human true vs false; urgency 2 vs 1 (within 1); action escalate_to_agent vs no_action (allowed)
+    FAIL #59 real    "Hey @Tesco U ok Hun? paid £3 for a meal deal and ended up wi": intent other vs damaged_item; needs_human true vs false; sentiment angry vs frustrated; urgency 2 vs 3 (within 1); action escalate_to_agent vs send_replacement (allowed)
+    FAIL #60 real    "seller central account remains suspended. No one can answer ": urgency 2 vs 4 (off by 2)
+    pass #62 real    "When you traying to paly debt to @115937 @AskeBay  "Sorry, w": sentiment neutral vs frustrated
+    FAIL #63 real    "Appalled with the way things have turned out. eBay did not c": intent order_status vs other; urgency 4 vs 3 (within 1)
+- **Qwen3-0.6B (SLM fc8a659a-fdb5-4159-b507-10ed97528946)** finished 2026-10-12T12:03:04Z. Platform metrics (`results/slm-fc8a659a-fdb5-4159-b507-10ed97528946/metrics.json`): base judge 0.062 / ref-free 0.047 | tuned judge 0.734 / ref-free 0.812 / binary 0.656
+  Local scorer (`results/slm-fc8a659a-fdb5-4159-b507-10ed97528946/score.txt`):
+  [tuned Qwen3-0.6B] curated correct 23/24 = 95.8% [79.8, 99.3] | json 24/24 | intent 95.8% order_id 100.0% needs_human 100.0% urgency±1 95.8% action_ok 95.8% | platform judge 95.8%
+  [tuned Qwen3-0.6B] real    correct 24/40 = 60.0% [44.6, 73.7] | json 40/40 | intent 72.5% order_id 100.0% needs_human 75.0% urgency±1 85.0% action_ok 87.5% | platform judge 60.0%
+  [tuned Qwen3-0.6B] blended correct 47/64 = 73.4% [61.5, 82.7] | json 64/64 | intent 81.3% order_id 100.0% needs_human 84.4% urgency±1 89.1% action_ok 90.6% | platform judge 73.4%
+    FAIL #03 curated "any update on my delivery? nothing has arrived yet": intent order_status vs delivery_issue; urgency 2 vs 4 (off by 2); action send_tracking_link vs open_carrier_investigation (not allowed for delivery_issue)
+    pass #17 curated "Received someone else's order": sentiment frustrated vs neutral
+    FAIL #25 real    "in the Nike+ running app I'm not able to change the coach 5k": intent other vs product_question; needs_human true vs false; urgency 3 vs 2 (within 1); action escalate_to_agent vs answer_from_faq (allowed)
+    FAIL #26 real    "I want the seriously annoying emails about items I have view": intent other vs account_access; sentiment angry vs frustrated
+    pass #27 real    "Our Airstream Topper is amazingly comfy &amp; cooler than me": sentiment positive vs neutral
+    FAIL #31 real    "Did you know your own brand bath foam doesn't leave any perf": intent product_question vs other; urgency 2 vs 1 (within 1); action answer_from_faq vs no_action (not allowed for other)
+    FAIL #34 real    "your Express store on Romford Road in London are keeping all": intent damaged_item vs other; needs_human true vs false; sentiment angry vs neutral; urgency 4 vs 1 (off by 3); action escalate_to_agent vs no_action (allowed)
+    FAIL #38 real    "prev hd ordrd seinhzr earphones hd to replace, a strolley da": intent other vs damaged_item; sentiment angry vs frustrated; urgency 2 vs 3 (within 1)
+    FAIL #39 real    "So @116245 have already taken my £45 for a game that doesn't": intent refund_status vs order_status; needs_human true vs false; urgency 4 vs 2 (off by 2); action escalate_to_billing vs send_tracking_link (not allowed for order_status)
+    FAIL #41 real    "Compré un #ajedrez  por @115821.Moderno,vino con 2 reinas y ": intent other vs damaged_item; sentiment angry vs frustrated; urgency 2 vs 4 (off by 2)
+    FAIL #43 real    "AMAZON IS THE COMPANY OF MOTHERFUCKERS, BUYERS NEED TO PAY F": needs_human false vs true; urgency 1 vs 2 (within 1); action no_action vs escalate_to_agent (allowed)
+    FAIL #45 real    "your garbage service can't even deliver a package when I got": needs_human false vs true; urgency 2 vs 4 (off by 2); action send_tracking_link vs escalate_to_agent (allowed)
+    FAIL #50 real    "Your Filipino call centers are THE GATES OF HELL!  FIVE HOUR": urgency 2 vs 4 (off by 2)
+    FAIL #51 real    "- and the chicken is a little pink 😱 #salmonella https://t.": intent other vs damaged_item; needs_human false vs true; sentiment neutral vs frustrated; urgency 1 vs 4 (off by 3); action no_action vs escalate_to_agent (not allowed for damaged_item)
+    pass #54 real    "Prize winning leek in my grocery delivery yesterday! #giantv": sentiment neutral vs positive
+    FAIL #55 real    "¿Qué os parece el nuevo Samsung Galaxy S5? En Amazon ya lo t": intent product_question vs other; urgency 2 vs 1 (within 1); action answer_from_faq vs no_action (not allowed for other)
+    FAIL #57 real    "need help 2 cancel Sling tv from my fire stick, moving and n": needs_human true vs false; action escalate_to_agent vs cancel_order (allowed)
+    pass #58 real    "who are the winners of #amazonsaletrail contest held on app ": sentiment neutral vs frustrated
+    FAIL #59 real    "Hey @Tesco U ok Hun? paid £3 for a meal deal and ended up wi": intent other vs damaged_item; needs_human true vs false; sentiment angry vs frustrated; urgency 2 vs 3 (within 1); action escalate_to_agent vs send_replacement (allowed)
+    FAIL #61 real    "bought work out clothes wrong size on Wed. 7/19 lost receipt": needs_human false vs true; action process_exchange vs escalate_to_agent (allowed)
+    FAIL #62 real    "When you traying to paly debt to @115937 @AskeBay  "Sorry, w": intent other vs billing_issue; needs_human true vs false; sentiment angry vs frustrated; action escalate_to_agent vs answer_from_faq (not allowed for billing_issue)
+    pass #63 real    "Appalled with the way things have turned out. eBay did not c": sentiment angry vs frustrated; urgency 2 vs 3 (within 1)

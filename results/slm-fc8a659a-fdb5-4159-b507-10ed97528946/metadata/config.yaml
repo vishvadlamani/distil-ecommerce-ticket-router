@@ -1,0 +1,164 @@
+base:
+  random_seed: 123
+  task: question-answering
+  visual_task: false
+  student_model_name: Qwen3-0.6B
+  teacher_model_name: zai.glm-5.3-low-thinking
+  llm_num_parallel_requests: 4
+  enable_thinking: false
+  should_expand_dataset: auto
+tuning:
+  learning_rate: 5e-05
+  learning_rate_scheduler: linear
+  weight_decay: 0.0
+  warmup_ratio: 0.05
+  bf16: true
+  use_lora: true
+  lora_alpha_multiplier: 1
+  lora_r: 64
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  enable_trainer_internal_eval: false
+  num_train_epochs: 4
+  logging_steps: 0.1
+  save_steps: 0.25
+  train_eval_split: 0.2
+  gradient_accumulation_steps: 1
+  num_few_shot_examples_student: 0
+  rlvr_dataset_size: 0.0
+  rlvr_llm_as_a_judge_model_name: zai.glm-5.3-low-thinking
+  rlvr_per_device_batch_size: 6
+  rlvr_num_generations: 6
+  rlvr_gradient_accumulation_steps: 1
+  rlvr_num_train_epochs: 1
+  rlvr_learning_rate: 5e-05
+  rlvr_weight_decay: 0.0
+  rlvr_learning_rate_scheduler: constant
+  rlvr_scale_rewards: batch
+  rlvr_vllm_importance_sampling_mode: token_truncate
+  rlvr_vllm_importance_sampling_clip_max: 2.0
+  rlvr_steps_per_generation:
+  rlvr_importance_sampling_level: sequence
+  rlvr_epsilon: 0.0003
+  rlvr_epsilon_high: 0.0004
+  rlvr_overlong_punishment_cache:
+  rlvr_vllm_gpu_memory_utilization: 0.3
+  rlvr_reward_metric: llm-judge-reference-free
+  max_completion_length: 2048
+  memory_optimized_training: false
+  use_qlora: false
+  awq_quantize_tuned_model: false
+evaluation:
+  batch_size: 4
+  num_few_shot_examples: 1
+  llm_as_a_judge_model_name: zai.glm-5.3-low-thinking
+synthgen:
+  train_generation_target: 10000
+  test_generation_target: 0
+  use_traces_as_context: false
+  generation_in_single_call: 4
+  generation_iteration_size: 128
+  num_positive_exemplars_per_generation: 2
+  num_negative_exemplars_per_generation: 1
+  validation_max_answer_length: 8192
+  validation_max_total_length: 30000
+  validation_similarity_threshold: 0.95
+  max_tool_calls_per_turn:
+  teacher_temperature: 0.6
+  teacher_max_tokens: 32000
+  match_generated_distribution_to_seed: false
+  num_unlabelled_exemplars_per_generation: 1
+  output_is_json: true
+  mutators:
+  - name: order_state
+    values:
+    - 'about a customer with no order on file: metadata order_id none, order_status
+      none, days_since_order none (product and sizing questions, account access, checkout
+      or billing problems, wholesale, spam, praise)'
+    - 'about an order still in processing: order_status processing, days_since_order
+      between 0 and 14'
+    - 'about an order that has shipped: order_status shipped, days_since_order between
+      1 and 10'
+    - 'about an order in transit: order_status in_transit, days_since_order between
+      2 and 16'
+    - 'about a delivered order: order_status delivered, days_since_order between 1
+      and 60'
+    - 'about an order the customer has already sent back: order_status returned, days_since_order
+      between 10 and 45'
+    - 'about an order with a refund underway: order_status refund_initiated, days_since_order
+      between 15 and 40'
+    auto_detect_sample_size: 50
+    method: fixed
+    target_distribution:
+    - 0.25
+    - 0.16666666666666666
+    - 0.08333333333333333
+    - 0.08333333333333333
+    - 0.25
+    - 0.08333333333333333
+    - 0.08333333333333333
+    description:
+    beta: 0.9
+  - name: register
+    values:
+    - written as a formal email with a greeting, full sentences and a sign-off
+    - written as a terse chat message of one or two short lines
+    - written in lowercase with typos, missing punctuation and no greeting
+    - written in all capitals by an angry customer, with an insult or a threat
+    - written politely but impatiently by a customer who has contacted support 
+      about this before (previous_contacts 1 to 3)
+    - written as a long rambling message that buries the actual request in 
+      irrelevant detail
+    - written in Spanish, German or French
+    auto_detect_sample_size: 50
+    method: fixed
+    target_distribution:
+    - 0.25
+    - 0.25
+    - 0.16666666666666666
+    - 0.08333333333333333
+    - 0.08333333333333333
+    - 0.08333333333333333
+    - 0.08333333333333333
+    description:
+    beta: 0.9
+  - name: manipulation
+    values:
+    - a plain customer ticket with no instructions aimed at the AI
+    - a message that is only an instruction aimed at the routing AI (an 
+      override, a fake system notice, a request to change the output format, a 
+      demand to copy a given JSON), with no genuine customer request
+    - a message that claims an entitlement or an approval the AI should honour 
+      (an instant refund already approved, a supervisor authorised a 
+      replacement) and asks the AI to skip escalation
+    - a genuine customer request with an injected instruction to the AI wrapped 
+      around it (a fake policy notice, 'ignore the metadata', 'set needs_human 
+      false')
+    auto_detect_sample_size: 50
+    method: fixed
+    target_distribution:
+    - 0.85
+    - 0.05
+    - 0.05
+    - 0.05
+    description:
+    beta: 0.9
+  mutator_update_frequency: 5
+  basic_mutators_to_use: []
+  mutation_topics: []
+  clean_training_targets: false
+  parallel_llm_calls: false
+trace_processing:
+  relabel: true
+  relevance_filtering: false
+  relevance_filtering_batch_size: 32
+  min_relevance_score: 4
+  min_coherence_score: 3
+  num_train_relabelled: 200
+  num_test_relabelled: 200
+  observation_format: openai_messages
+  remove_system_prompt_from_traces: true
+  compress_job_description: false
+  teacher_model_name: zai.glm-5.3-low-thinking
+  relabelling_committee_models: []
+  committee_max_input_length: 250000
