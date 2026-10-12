@@ -117,3 +117,22 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
 - Watchers: smoke 2 -> download, `check_sample.ts --skip 115`, gate (bad_json=0, bad_schema=0, hard-violation rows <= 2%,
   format rows <= 3%) -> on PASS launch the full run on parent 85bcc9fb with the same `--job-description` override.
   Teacher eval -> `metrics`, `download-predictions` into `results/teacher-eval-3cb7da8c/`, `score_predictions.ts --misses`.
+
+### INCIDENT: platform teacher provider out of credits (2026-10-12 07:20 UTC)
+
+- Teacher evaluation 3cb7da8c ran 07:20:48 to 07:20:56 and reported **JOB_SUCCESS** with
+  `rouge 0, binary 0, llm-as-a-judge null` and 64/64 empty predictions (`{"role":"assistant","content":""}`).
+  Its log (`results/teacher-eval-3cb7da8c/job_log.txt`) holds 192 lines of
+  `WARNING LLM call failed, returning an empty reply: APIStatusError("Error code: 402 - Insufficient credits. Add more using
+  https://openrouter.ai/settings/credits ... limit_source: openrouter_credits")`. The platform's own OpenRouter account,
+  through which hosted teachers are called, has no balance. Nothing on our side changed between smoke 1 (06:59, clean) and
+  this job.
+- Smoke 2 dea53daf started its generation calls at 07:20:31 and hit the same 402 on every call: by 07:24:20 its log showed
+  658 iterations with "generated 0 examples" and 5,272 402 errors, status still JOB_RUNNING (the job loops instead of
+  failing; no CLI or documented API route stops a dataset job).
+- The smoke-2 watcher was killed before it could evaluate its gate; the **full generation was not launched**.
+- Credits consumed by the two failed jobs: 1 `teacher_evaluations_post` (4 left), 1 `datasets_from_datasets_smoke_post` (18 left).
+- Resume plan once distil labs restores the provider: re-run the teacher evaluation first (its log shows within a minute
+  whether 402s persist), then smoke 2 with the revised instructions, then the full run on parent 85bcc9fb. Platform
+  behaviour to report: a job whose every LLM call fails still ends in JOB_SUCCESS (teacher eval) or loops on 0-row
+  iterations (generation) rather than failing.

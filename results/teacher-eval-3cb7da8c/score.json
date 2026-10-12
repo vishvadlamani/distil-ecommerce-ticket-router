@@ -1,0 +1,84 @@
+{
+  "name": "GLM-5.3-low teacher",
+  "file": "results/teacher-eval-3cb7da8c/predictions.jsonl",
+  "n_predictions": 64,
+  "unmatched": 0,
+  "missing": [],
+  "slices": {
+    "curated": {
+      "n": 24,
+      "n_expected": 24,
+      "pass": 0,
+      "p": 0,
+      "lo": 0,
+      "hi": 0.13797620655132792,
+      "json_valid": 0,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "24",
+        "schema": "0.0%",
+        "intent": "0.0%",
+        "order_id": "0.0%",
+        "needs_human": "0.0%",
+        "sentiment": "0.0%",
+        "urgency_within1": "0.0%",
+        "action_allowed": "0.0%",
+        "judge_pass": "0.0%"
+      },
+      "latency_p50": null,
+      "latency_p95": null,
+      "in_tok": 0,
+      "out_tok": 0
+    },
+    "real": {
+      "n": 40,
+      "n_expected": 40,
+      "pass": 0,
+      "p": 0,
+      "lo": 0,
+      "hi": 0.08762160245846368,
+      "json_valid": 0,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "40",
+        "schema": "0.0%",
+        "intent": "0.0%",
+        "order_id": "0.0%",
+        "needs_human": "0.0%",
+        "sentiment": "0.0%",
+        "urgency_within1": "0.0%",
+        "action_allowed": "0.0%",
+        "judge_pass": "0.0%"
+      },
+      "latency_p50": null,
+      "latency_p95": null,
+      "in_tok": 0,
+      "out_tok": 0
+    },
+    "blended": {
+      "n": 64,
+      "n_expected": 64,
+      "pass": 0,
+      "p": 0,
+      "lo": 0,
+      "hi": 0.05662406063551054,
+      "json_valid": 0,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "64",
+        "schema": "0.0%",
+        "intent": "0.0%",
+        "order_id": "0.0%",
+        "needs_human": "0.0%",
+        "sentiment": "0.0%",
+        "urgency_within1": "0.0%",
+        "action_allowed": "0.0%",
+        "judge_pass": "0.0%"
+      },
+      "latency_p50": null,
+      "latency_p95": null,
+      "in_tok": 0,
+      "out_tok": 0
+    }
+  }
+}
