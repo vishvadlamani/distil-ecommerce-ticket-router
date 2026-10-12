@@ -142,6 +142,14 @@ fi
 
 # ---------------------------------------------------------------- E: deploy, eval, sweep, delete
 if [ ! -f $STATE/E.done ]; then
+  # cleanup after an interrupted run: delete any deployment recorded without a done marker
+  if [ -f $S/deployment_ids ]; then
+    while read st sid did; do
+      [ -f $STATE/E_$sid.done ] && continue
+      EST=$(distil deployment status --output json $did 2>/dev/null | jget "['endpoint_status']")
+      if [ "$EST" != "stopped" ]; then log "E: cleanup: deleting orphaned deployment $did ($st, endpoint_status=$EST)"; distil deployment delete $did >/dev/null 2>&1; fi
+    done < $S/deployment_ids
+  fi
   while read st sid; do
     [ -f $STATE/D_failed_$sid ] && continue
     [ -f $STATE/E_$sid.done ] && continue

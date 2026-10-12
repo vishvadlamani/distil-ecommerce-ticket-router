@@ -238,3 +238,7 @@ run follows. Things we hit that belong in those docs or in the platform:
 - Container restart at ~09:56 UTC (uptime 1 min at the 09:57 check-in) killed the detached pipeline between its 09:44 and
   09:49 polls; files and the distil session survived. Pipeline restarted at 09:58 and resumed at stage D from its markers
   (A, B, C done). Lesson for the guide: a timed self check-in must also verify the detached process is alive and restart it.
+- 10:28 UTC check-in: the container had restarted again (uptime 0 min). The cloud container suspends whenever no tool
+  call is running, which kills detached processes; a background tool task keeps it alive (the generation watcher ran
+  1.5 h that way). The pipeline now runs as a background tool task (2 h cap, relaunched by the check-ins if needed),
+  and stage E starts by deleting any deployment left running by an interrupted run. Trainings still JOB_RUNNING.
