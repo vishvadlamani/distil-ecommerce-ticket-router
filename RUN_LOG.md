@@ -235,3 +235,6 @@ run follows. Things we hit that belong in those docs or in the platform:
   the metadata, 0 seed bodies copied, 34 duplicate bodies (metadata-flip pairs), needs_human 35.5%.
 - Risk noted for the student read-out: billing_issue is 475 answer_from_faq vs 108 escalate_to_billing (the balance
   instruction over-corrected toward FAQ); the test set splits billing 50/50. Watch test rows #18 and #32.
+- Container restart at ~09:56 UTC (uptime 1 min at the 09:57 check-in) killed the detached pipeline between its 09:44 and
+  09:49 polls; files and the distil session survived. Pipeline restarted at 09:58 and resumed at stage D from its markers
+  (A, B, C done). Lesson for the guide: a timed self check-in must also verify the detached process is alive and restart it.
