@@ -216,3 +216,8 @@ run follows. Things we hit that belong in those docs or in the platform:
 ### Step 4 result: full generation 97b42e81 (auto-logged 2026-10-12T09:39:14Z)
 
 - Audit over every generated row (`check_sample.ts --skip 115`, evidence in `results/full-97b42e81/audit.txt`): gate **PASS rows=10042 bad_json=0 bad_schema=0 hard=4 fmt=75 n402=0**.
+- Trainings launched 2026-10-12T09:39:32Z with complete config overrides derived from the generated dataset's expanded config
+  (`results/full-97b42e81/train_config_*.yaml`, only `student_model_name` differs):
+  - Qwen3-1.7B -> **SLM c1fa3d30-475a-4436-bbca-8833d178563f**
+  - Qwen3-0.6B -> **SLM fc8a659a-fdb5-4159-b507-10ed97528946**
+  2 `slms_from_datasets_post` credits (3 left).
