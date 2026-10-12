@@ -160,3 +160,17 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   over product_question / damaged_item / billing_issue / cancellation on tweets, Twitter handles copied as order ids
   (#39 "@116245", #41 "115821"), needs_human false on rants, and 3 action-table breaks (answer_from_faq for order_status
   on #24, #39, #45). Those are the out-of-domain rows that the 60 real seeds exist for.
+
+### Step 2 result: smoke 2 re-run 0c718c71 passed; full generation launched (2026-10-12 07:50 UTC)
+
+- Smoke 0c718c71 ran 07:47:26 to 07:48:20 (156 rows, 5 iterations), 0 x 402. Audit over the 156 new rows:
+  `bad_json=0 bad_schema=0 HARD 0 (0.0%) FORMAT 0 SOFT 0`. Evidence: `results/smoke-0c718c71/{generated_rows.jsonl,audit.txt}`.
+- Coverage after the instruction change: account_access 6 escalate / 4 send_password_reset (was 10 / 0); cancellation 6
+  cancel_order / 7 escalate; exchange 10 automated / 3 escalate; return 4 / 2; billing_issue 9 answer_from_faq / 1
+  escalate_to_billing (small sample; re-checked on the full set). Intents: order_status 28, other 17, refund_status 16,
+  damaged_item 16, cancellation 13, exchange 13, sizing_fit 10, account_access 10, billing_issue 10, product_question 9,
+  delivery_issue 8, return_request 6.
+- Gate PASS (rows>=100, no JSON/schema failures, hard rows <= 2%, format rows <= 3%, zero 402s) -> watcher launched
+  `distil dataset generate-synthetic-data-train --output json --job-description platform-v6/job_description.json 85bcc9fb-...`
+  -> **full Dataset 97b42e81-2357-4c88-a8ed-3b8c15402e32** (parent 85bcc9fb, target 10,000, 1 generation credit; 4 left).
+  Watcher polls every 5 min, then downloads and audits every generated row before any training.

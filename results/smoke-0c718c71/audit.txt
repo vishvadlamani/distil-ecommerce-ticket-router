@@ -1,0 +1,11 @@
+rows=156 (skipped 115) bad_json=0 bad_schema=0 duplicate_prompts=0 no_metadata_block=0
+HARD violations: rows=0 (0.0%)  none
+FORMAT issues:   rows=0 (0.0%)  none
+SOFT flags:      rows=0 (0.0%)  none
+needs_human=46/156 (29.5%) prev>=2 rows=10
+intents:  order_status=28 delivery_issue=8 return_request=6 refund_status=16 exchange=13 cancellation=13 product_question=9 sizing_fit=10 damaged_item=16 billing_issue=10 account_access=10 other=17
+actions:  send_tracking_link=18 open_carrier_investigation=8 send_return_label=4 send_refund_timeline=8 process_exchange=10 cancel_order=6 answer_from_faq=18 send_sizing_guide=10 send_replacement=14 escalate_to_billing=9 send_password_reset=4 escalate_to_agent=37 no_action=10
+statuses: delivered=40 none=40 processing=32 shipped=24 refund_initiated=10 returned=6 in_transit=4
+channels: email=76 chat=50 contact_form=30
+body chars: p10=84 p50=219 p90=506
+GATE: hard-violation rate 0.0% over 156 rows (hard rules: action_table, escalate_without_human, no_action_with_human, prev2_without_human, order_id_not_verbatim, post_ship_cancel_not_escalated, out_of_window_not_escalated, stuck_processing_not_escalated, delivery_issue_while_processing)
