@@ -174,3 +174,31 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   `distil dataset generate-synthetic-data-train --output json --job-description platform-v6/job_description.json 85bcc9fb-...`
   -> **full Dataset 97b42e81-2357-4c88-a8ed-3b8c15402e32** (parent 85bcc9fb, target 10,000, 1 generation credit; 4 left).
   Watcher polls every 5 min, then downloads and audits every generated row before any training.
+
+## Feedback for distil labs (running list; turned into a note for Jacek at the end of the run)
+
+Their docs and the `distil-cli` skill (v10.0.3, public at github.com/distil-labs/distil-cli-skill) are the reference this
+run follows. Things we hit that belong in those docs or in the platform:
+
+1. **Provider failure is reported as success.** With their OpenRouter balance at zero (07:20 to ~07:40 UTC), the teacher
+   evaluation 3cb7da8c returned JOB_SUCCESS with 64/64 empty predictions and metrics `rouge 0, binary 0, judge null`; the
+   generation smoke dea53daf looped through 1,000 zero-row iterations (8,000 x 402) and also ended JOB_SUCCESS with no rows.
+   Both consumed credits. Expected: fail fast with the provider error in `status`/`logs`, and no credit charged.
+2. **Download adds an `images` key to user messages** (`dataset download`, `training-dataset download`). Undocumented;
+   harmless for training, but it breaks a byte-identity check against the uploaded file.
+3. **Smoke iteration granularity is 32 rows, not `generation_iteration_size` (128).** A 128-row smoke produced 148 and
+   156 rows in 5 iterations of ~32. The configuration doc says targets round up to `generation_iteration_size`.
+4. **`GET /deployments/<id>/endpoint` returns `{url, api_key}`** for a live deployment, but the CLI has no
+   `deployment endpoint` command and the docs say a deployment is never called directly. Either document the direct
+   route (it is the right one for load testing a single GPU) or remove it.
+5. **A worked example for `synthetic_data_generation_instructions` on a rule-heavy task.** Numbered mechanical label
+   rules in the task description's words + the exact input template + a variety paragraph, with GLM 5.3 low-thinking,
+   gave 0 hard-rule violations in 304 generated rows across two smokes. The same task in August with gpt-oss-120b and
+   no instructions had ~13% of rows breaking a rule. Their job-description page has no example of this shape.
+6. **Throughput data point for the docs' "can take 90 minutes":** GLM 5.3 low-thinking generated 156 rows in 54 s
+   (smoke) and 380 rows in the first 3 min of the full run at `llm_num_parallel_requests: 4`.
+7. **`metrics` on August SLMs** (e.g. 46bf8b2b) answers "No metrics for this SLM yet: the job has not finished" although
+   the job finished in August. Legacy entities' metrics look unreadable after the entity migration.
+8. **`dataset create --data` silently ignores subdirectories** (our `overrides/`). Worth one line in the CLI reference.
+9. **The `training-dataset sample` free sample is gone**; the replacement (`--smoke`) spends a smoke credit and writes a
+   side-branch dataset. The migration page covers the commands but not that the sample is now a billed job.
