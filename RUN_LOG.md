@@ -296,3 +296,13 @@ run follows. Things we hit that belong in those docs or in the platform:
     FAIL #61 real    "bought work out clothes wrong size on Wed. 7/19 lost receipt": needs_human false vs true; action process_exchange vs escalate_to_agent (allowed)
     FAIL #62 real    "When you traying to paly debt to @115937 @AskeBay  "Sorry, w": intent other vs billing_issue; needs_human true vs false; sentiment angry vs frustrated; action escalate_to_agent vs answer_from_faq (not allowed for billing_issue)
     pass #63 real    "Appalled with the way things have turned out. eBay did not c": sentiment angry vs frustrated; urgency 2 vs 3 (within 1)
+- **Deployment 8c45e7de-c4d3-4f21-8396-f30d72de522e** (Qwen3-1.7B, SLM c1fa3d30-475a-4436-bbca-8833d178563f, $3/h) 2026-10-12T12:11:28Z: endpoint_status after delete = stopped, deployment time 498 s.
+  Endpoint eval (64 rows, sequential): [tuned Qwen3-1.7B via deployment] blended correct 45/64 = 70.3% [58.2, 80.1] | json 64/64 | intent 87.5% order_id 98.4% needs_human 84.4% urgency±1 92.2% action_ok 92.2% | p50 809ms p95 1065ms
+  Untrained base via the same endpoint: [untrained Qwen3-1.7B via deployment] blended correct 23/64 = 35.9% [25.3, 48.2] | json 62/64 | intent 59.4% order_id 93.8% needs_human 64.1% urgency±1 78.1% action_ok 76.6% | p50 597ms p95 747ms
+  Sweep (`results/deploy-8c45e7de-c4d3-4f21-8396-f30d72de522e/sweep.jsonl`):
+  conc=  8 n=256 rps=8.6 p50=912ms p95=1071ms errors=0 valid=256/256 out_tok=37.3 cost/1k=$0.0968
+  conc= 16 n=256 rps=16.39 p50=935ms p95=1142ms errors=0 valid=256/256 out_tok=37.3 cost/1k=$0.0508
+  conc= 32 n=256 rps=30.1 p50=954ms p95=1491ms errors=0 valid=256/256 out_tok=37.3 cost/1k=$0.0277
+  conc= 64 n=256 rps=52.65 p50=966ms p95=1678ms errors=0 valid=256/256 out_tok=37.2 cost/1k=$0.0158
+  conc= 96 n=384 rps=69.91 p50=1015ms p95=2222ms errors=0 valid=384/384 out_tok=37.3 cost/1k=$0.0119
+  conc=128 n=512 rps=101.01 p50=1056ms p95=1803ms errors=0 valid=512/512 out_tok=37.3 cost/1k=$0.0083

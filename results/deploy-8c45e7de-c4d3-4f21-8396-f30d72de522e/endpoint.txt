@@ -1,0 +1,2 @@
+url=https://ta-01m4r00kdrxynj78fsnmpna2ps-8000-o4f61epy19sv6s785chcxzsin.w.modal.host/
+base_url=https://ta-01m4r00kdrxynj78fsnmpna2ps-8000-o4f61epy19sv6s785chcxzsin.w.modal.host/v1
