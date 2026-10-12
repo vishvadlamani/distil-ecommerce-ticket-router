@@ -306,3 +306,39 @@ run follows. Things we hit that belong in those docs or in the platform:
   conc= 64 n=256 rps=52.65 p50=966ms p95=1678ms errors=0 valid=256/256 out_tok=37.2 cost/1k=$0.0158
   conc= 96 n=384 rps=69.91 p50=1015ms p95=2222ms errors=0 valid=384/384 out_tok=37.3 cost/1k=$0.0119
   conc=128 n=512 rps=101.01 p50=1056ms p95=1803ms errors=0 valid=512/512 out_tok=37.3 cost/1k=$0.0083
+- **Deployment 791a667a-78b3-4ecb-9e63-d96bcf711db4** (Qwen3-0.6B, SLM fc8a659a, $1/h): created 12:11:35, endpoint running after 436 s, deleted
+  12:32:48, endpoint_status stopped 12:32:55 (21 min total). The pipeline's 2 h task cap hit at 12:29 during the extended
+  sweep; levels 128, 256 and 512 were run by hand on the same live deployment, then it was deleted. No extra credit.
+  Endpoint eval (64 rows, sequential): [tuned Qwen3-0.6B via deployment] blended correct 49/64 = 76.6% [64.9, 85.3] | json 64/64 | intent 81.3% order_id 100.0% needs_human 87.5% urgency±1 90.6% action_ok 90.6% | p50 3091ms p95 4951ms
+  Untrained base via the same endpoint: [untrained Qwen3-0.6B via deployment] blended correct 3/64 = 4.7% [1.6, 12.9] | json 61/64 | intent 35.9% order_id 21.9% needs_human 59.4% urgency±1 68.8% action_ok 34.4% | p50 2871ms p95 3656ms
+  Sweep (`results/deploy-791a667a-78b3-4ecb-9e63-d96bcf711db4/sweep.jsonl`):
+  conc=  8 n=256 rps=2.44 p50=3162ms p95=3844ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.1137
+  conc= 16 n=256 rps=4.84 p50=3201ms p95=3868ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.0574
+  conc= 32 n=256 rps=9.32 p50=3282ms p95=3946ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.0298
+  conc= 64 n=256 rps=16.9 p50=3412ms p95=4204ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.0164
+  conc= 96 n=384 rps=23.77 p50=3510ms p95=4914ms errors=0 valid=384/384 out_tok=37.1 cost/1k=$0.0117
+  conc=128 n=512 rps=31.54 p50=3596ms p95=4984ms errors=0 valid=512/512 out_tok=37.1 cost/1k=$0.0088
+  conc=256 n=1024 rps=55.18 p50=3881ms p95=6403ms errors=0 valid=1024/1024 out_tok=37.1 cost/1k=$0.0050
+  conc=512 n=2048 rps=59.32 p50=7683ms p95=10212ms errors=0 valid=2048/2048 out_tok=37.1 cost/1k=$0.0047
+  Plateau: 55.2 rps at 256 in flight, 59.3 at 512 with p50 doubling to 7.7 s -> max ~59 rps on one $1/h GPU,
+  **$0.0047 per 1,000 tickets**. The 1.7B sweep stopped at the script's 128 cap while still rising (101 rps, p50 1.06 s):
+  its plateau is not yet measured; $0.0083 per 1,000 at 128 in flight is an upper bound on its cost.
+- Note: the $1/h 0.6B endpoint is slower per request than the $3/h 1.7B one (p50 3.2 s vs 0.9 s sequential, 2.4 vs
+  8.6 rps at 8 in flight), so the two tiers run on different GPUs; compare cost per 1,000, not rps.
+
+### Step 6 read-out: students vs teacher, every miss read (2026-10-12 12:35 UTC)
+
+- Teacher GLM 5.3 low: 22/24, 25/40, 47/64. Tuned 1.7B: 22/24, 23/40, 45/64. Tuned 0.6B: 23/24, 24/40, 47/64.
+  Untrained (same endpoint, same prompts): 1.7B 23/64, 0.6B see score_base.txt. JSON valid 64/64 for every tuned run.
+  Platform judge equals the local scorer on every slice for all three. Platform ref-free judge: both students 0.8125,
+  teacher 0.891. Platform-side base judge: 1.7B 0.328, 0.6B 0.063.
+- August (gpt-oss-120b teacher, repaired data): teacher 18/24, 24/40, 42/64; tuned 1.7B 20/24, 23/40, 43/64.
+- Curated misses: both students miss #03 ("any update on my delivery? nothing has arrived yet", delivered 7 d: labelled
+  order_status + tracking instead of delivery_issue + carrier investigation; the teacher gets it); the 1.7B also misses
+  #17 (someone else's parcel kept automated, the teacher's own miss). The 0.6B's curated 23/24 beats the teacher's 22/24
+  by one row, inside the noise.
+- Real-slice misses are the teacher's misses: of the 1.7B's 17 real misses, 12 are rows the teacher also misses
+  (#24 #26 #38 #39 #41 #43 #45 #50 #51 #57 #59 and #62/#63 variants); the 0.6B's 16 overlap similarly. New student-only
+  misses are tweets routed to product_question/answer_from_faq where the label is other/no_action (#31 #34 #55) and
+  rants labelled no_action where a human is wanted (#36 #58). The billing skew flagged on the dataset did not show:
+  #18 and #32 are correct for both students.
