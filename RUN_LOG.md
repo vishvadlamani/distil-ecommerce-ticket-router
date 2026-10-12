@@ -205,3 +205,10 @@ run follows. Things we hit that belong in those docs or in the platform:
 8. **`dataset create --data` silently ignores subdirectories** (our `overrides/`). Worth one line in the CLI reference.
 9. **The `training-dataset sample` free sample is gone**; the replacement (`--smoke`) spends a smoke credit and writes a
    side-branch dataset. The migration page covers the commands but not that the sample is now a billed job.
+
+### Overnight approvals (user, 2026-10-12 ~08:55 UTC)
+
+- Approved without further prompts: both trainings (2 training credits) and both deployments (2 deployment credits plus
+  GPU time), gated on the full-set audit passing the smoke gate. Deployments are deleted right after their sweep.
+- Pipeline: `scripts/overnight_pipeline.sh` (detached, resumable via markers in the scratchpad; auto-appends ids and
+  headline numbers here and pushes after each stage). Timed self check-ins every ~30 min keep the session alive.
