@@ -82,3 +82,13 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   `gemini-3.5-flash-lite` $0.30 in / $2.50 out per 1M tokens (newest stable Flash-Lite).
 - Deployment direct access: `GET https://api.distillabs.ai/deployments/<id>/endpoint` returns `{url, api_key}`
   (null once stopped), so the sweep needs no inference-endpoint credit.
+
+### Step 2: dataset upload and smoke generation (2026-10-12 06:56 UTC)
+
+- `distil dataset create --data ./platform-v6` -> **Dataset 85bcc9fb-2468-4a59-8051-17a41857be2a** (direct_upload, JOB_SUCCESS at once).
+  1 `datasets_post` credit. The `overrides/` subfolder was ignored by the uploader.
+- `distil dataset generate-synthetic-data-train --smoke --output json 85bcc9fb-2468-4a59-8051-17a41857be2a` ->
+  **smoke Dataset ed14b487-e3ff-43f5-a5eb-915dec1cdf40** (parent 85bcc9fb, 128-row target, 1 `datasets_from_datasets_smoke_post` credit).
+  Side branch: the full run goes on the parent 85bcc9fb, never on the smoke child.
+- Gate: download ed14b487, audit rows after the first 115 (the parent's seeds) with
+  `bun scripts/check_sample.ts <train.jsonl> --skip 115`. Hard-violation rate must be near zero.
