@@ -342,3 +342,18 @@ run follows. Things we hit that belong in those docs or in the platform:
   misses are tweets routed to product_question/answer_from_faq where the label is other/no_action (#31 #34 #55) and
   rants labelled no_action where a human is wanted (#36 #58). The billing skew flagged on the dataset did not show:
   #18 and #32 are correct for both students.
+
+## Summary (2026-10-12 12:50 UTC)
+
+- Wall clock 06:56 (upload) to 12:33 (last deployment deleted), including the 20-minute provider outage.
+- Dataset 85bcc9fb -> smokes ed14b487 (148 rows) / dea53daf (outage, 0 rows) / 0c718c71 (156 rows) -> full 97b42e81
+  (10,042 rows, 4 hard-rule violations) -> teacher eval b153e39f (47/64) -> SLMs c1fa3d30 (1.7B, 45/64) and fc8a659a
+  (0.6B, 47/64) -> deployments 8c45e7de (1.7B, 101 rps at 128 in flight, not plateaued, <= $0.0083/1k) and 791a667a
+  (0.6B, 59 rps plateau, $0.0047/1k). Results table: `results/RESULTS.md`. Credits spent: 1 upload, 3 smokes, 2 teacher
+  evals, 1 generation, 2 trainings, 2 deployments.
+- Open: (1) 1.7B throughput plateau (needs one redeploy, 1 deployment credit, ~10 min at $3/h, levels 256-1024);
+  (2) GPT-5.6 Luna and Gemini 3.5 Flash-Lite baselines (need keys; `bun run eval-external`); (3) round-2 weights not yet
+  on Hugging Face (`distil slm download` fetches the adapters).
+- Feedback list for distil labs (above) gained: (10) deployments came up in 4.5 to 7 min; (11) the $1/h tier is a slower
+  GPU than the $3/h tier (p50 3.2 s vs 0.9 s at 8 in flight), worth a line in the pricing docs; (12) the untrained base
+  served as `base` on the same deployment is a free, like-for-like untrained baseline the docs could mention.
