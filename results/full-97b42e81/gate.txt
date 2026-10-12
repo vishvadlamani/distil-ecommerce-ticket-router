@@ -1,0 +1,1 @@
+PASS rows=10042 bad_json=0 bad_schema=0 hard=4 fmt=75 n402=0

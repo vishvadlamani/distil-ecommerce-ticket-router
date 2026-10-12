@@ -212,3 +212,7 @@ run follows. Things we hit that belong in those docs or in the platform:
   GPU time), gated on the full-set audit passing the smoke gate. Deployments are deleted right after their sweep.
 - Pipeline: `scripts/overnight_pipeline.sh` (detached, resumable via markers in the scratchpad; auto-appends ids and
   headline numbers here and pushes after each stage). Timed self check-ins every ~30 min keep the session alive.
+
+### Step 4 result: full generation 97b42e81 (auto-logged 2026-10-12T09:39:14Z)
+
+- Audit over every generated row (`check_sample.ts --skip 115`, evidence in `results/full-97b42e81/audit.txt`): gate **PASS rows=10042 bad_json=0 bad_schema=0 hard=4 fmt=75 n402=0**.
