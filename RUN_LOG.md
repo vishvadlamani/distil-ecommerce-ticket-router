@@ -136,3 +136,12 @@ Planned spend: 1 dataset upload, 1 smoke generation (+1 if the teacher changes),
   whether 402s persist), then smoke 2 with the revised instructions, then the full run on parent 85bcc9fb. Platform
   behaviour to report: a job whose every LLM call fails still ends in JOB_SUCCESS (teacher eval) or loops on 0-row
   iterations (generation) rather than failing.
+
+### Resume after the provider top-up (2026-10-12 07:43 UTC)
+
+- Jacek confirmed distil labs' OpenRouter balance was topped up. The old smoke 2 (dea53daf) had meanwhile ended at
+  iteration 999 with 0 generated rows and status JOB_SUCCESS (8,000 x 402 in its log; last at 07:26:22). Unusable.
+- Teacher evaluation re-run: `distil teacher-evaluation create-from-dataset --output json 85bcc9fb-...` ->
+  **TeacherEvaluation b153e39f-e24f-4cc6-aa44-cdf3fc5645f7** (07:43:26; 1 credit; 3 left).
+- Smoke 2 re-run: `distil dataset generate-synthetic-data-train --smoke --output json --job-description platform-v6/job_description.json 85bcc9fb-...`
+  -> **smoke Dataset 0c718c71-2848-486a-a133-74da1c809276** (1 smoke credit; 17 left). Watcher gate adds: zero 402 lines in the job log.
