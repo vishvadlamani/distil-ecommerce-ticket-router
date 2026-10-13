@@ -1,0 +1,10 @@
+endpoint=https://ta-01m4r00kdrxynj78fsnmpna2ps-8000-o4f61epy19sv6s785chcxzsin.w.modal.host/v1 model=model prompts=64 levels=8,16,32,64 requests/level=256 max_tokens=160
+warm-up: 0 errors, 10/10 valid JSON, p50 1077 ms
+conc=  8 n=256 rps=8.6 p50=912ms p95=1071ms errors=0 valid=256/256 out_tok=37.3 cost/1k=$0.0968
+conc= 16 n=256 rps=16.39 p50=935ms p95=1142ms errors=0 valid=256/256 out_tok=37.3 cost/1k=$0.0508
+conc= 32 n=256 rps=30.1 p50=954ms p95=1491ms errors=0 valid=256/256 out_tok=37.3 cost/1k=$0.0277
+conc= 64 n=256 rps=52.65 p50=966ms p95=1678ms errors=0 valid=256/256 out_tok=37.2 cost/1k=$0.0158
+endpoint=https://ta-01m4r00kdrxynj78fsnmpna2ps-8000-o4f61epy19sv6s785chcxzsin.w.modal.host/v1 model=model prompts=64 levels=96,128 requests/level=384 max_tokens=160
+warm-up: 0 errors, 10/10 valid JSON, p50 1025 ms
+conc= 96 n=384 rps=69.91 p50=1015ms p95=2222ms errors=0 valid=384/384 out_tok=37.3 cost/1k=$0.0119
+conc=128 n=512 rps=101.01 p50=1056ms p95=1803ms errors=0 valid=512/512 out_tok=37.3 cost/1k=$0.0083

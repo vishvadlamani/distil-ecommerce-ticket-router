@@ -1,0 +1,16 @@
+endpoint=https://ta-01m4r0jsxvzmmj1w6qf8h7rxts-8000-x19e8d0brjm46nlud15ujzqes.w.modal.host/v1 model=model prompts=64 levels=8,16,32,64 requests/level=256 max_tokens=160
+warm-up: 0 errors, 10/10 valid JSON, p50 4008 ms
+conc=  8 n=256 rps=2.44 p50=3162ms p95=3844ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.1137
+conc= 16 n=256 rps=4.84 p50=3201ms p95=3868ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.0574
+conc= 32 n=256 rps=9.32 p50=3282ms p95=3946ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.0298
+conc= 64 n=256 rps=16.9 p50=3412ms p95=4204ms errors=0 valid=256/256 out_tok=37.1 cost/1k=$0.0164
+endpoint=https://ta-01m4r0jsxvzmmj1w6qf8h7rxts-8000-x19e8d0brjm46nlud15ujzqes.w.modal.host/v1 model=model prompts=64 levels=96,128 requests/level=384 max_tokens=160
+warm-up: 0 errors, 10/10 valid JSON, p50 3751 ms
+conc= 96 n=384 rps=23.77 p50=3510ms p95=4914ms errors=0 valid=384/384 out_tok=37.1 cost/1k=$0.0117
+endpoint=https://ta-01m4r0jsxvzmmj1w6qf8h7rxts-8000-x19e8d0brjm46nlud15ujzqes.w.modal.host/v1 model=model prompts=64 levels=128,256 requests/level=512 max_tokens=160
+warm-up: 0 errors, 10/10 valid JSON, p50 3733 ms
+conc=128 n=512 rps=31.54 p50=3596ms p95=4984ms errors=0 valid=512/512 out_tok=37.1 cost/1k=$0.0088
+conc=256 n=1024 rps=55.18 p50=3881ms p95=6403ms errors=0 valid=1024/1024 out_tok=37.1 cost/1k=$0.0050
+endpoint=https://ta-01m4r0jsxvzmmj1w6qf8h7rxts-8000-x19e8d0brjm46nlud15ujzqes.w.modal.host/v1 model=model prompts=64 levels=512 requests/level=1024 max_tokens=160
+warm-up: 0 errors, 10/10 valid JSON, p50 3852 ms
+conc=512 n=2048 rps=59.32 p50=7683ms p95=10212ms errors=0 valid=2048/2048 out_tok=37.1 cost/1k=$0.0047

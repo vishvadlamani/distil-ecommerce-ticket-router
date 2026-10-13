@@ -1,78 +1,95 @@
-/** Validate a `distil training-dataset sample` dump: parse every assistant
- * JSON, check schema + action coherence + escalate/no_action invariants +
- * order_id-verbatim-in-prompt, report label distribution. Input: file path. */
+/** Sample gate / dataset audit for generated data (round 2: audit only, never rewrite).
+ *
+ * Input: a JSONL file of {messages:[user, assistant]} rows (a `distil dataset
+ * download` train.jsonl) or the pretty-printed objects an older CLI printed.
+ * Every row is parsed, schema-checked and audited against the contract's rules
+ * (scripts/contract_rules.ts). Prints per-rule counts, the violation rate and
+ * the label/metadata distribution.
+ *
+ * Usage: bun scripts/check_sample.ts <file> [--skip N] [--show K]
+ *   --skip N   ignore the first N rows (the parent dataset's rows; a generated
+ *              dataset lists the parent's rows first, then the new ones)
+ *   --show K   print up to K example violations per rule (default 3)
+ */
 import { readFile } from "node:fs/promises";
-import { ACTION_TABLE, RouterOutputSchema, INTENTS } from "../src/types.ts";
+import { ACTION_TABLE, RouterOutputSchema, INTENTS, ACTIONS } from "../src/types.ts";
+import { auditRow, HARD_RULES } from "./contract_rules.ts";
 
-const raw = await readFile(process.argv[2], "utf8");
-// The sample output is pretty-printed JSON objects separated by blank lines,
-// possibly with a header line and hard line-wraps. Recover objects by brace
-// matching on the whole text.
-const objects: string[] = [];
-let depth = 0, start = -1, inStr = false, esc = false;
-for (let i = 0; i < raw.length; i++) {
-  const c = raw[i];
-  if (esc) { esc = false; continue; }
-  if (c === "\\") { esc = true; continue; }
-  if (c === '"') inStr = !inStr;
-  if (inStr) continue;
-  if (c === "{") { if (depth === 0) start = i; depth++; }
-  if (c === "}") { depth--; if (depth === 0 && start >= 0) { objects.push(raw.slice(start, i + 1)); start = -1; } }
-}
+const args = process.argv.slice(2);
+const file = args.find((a) => !a.startsWith("--"));
+if (!file) { console.error("usage: bun scripts/check_sample.ts <file> [--skip N] [--show K]"); process.exit(2); }
+const opt = (n: string, d: number) => { const i = args.indexOf(`--${n}`); return i >= 0 ? Number(args[i + 1]) : d; };
+const SKIP = opt("skip", 0), SHOW = opt("show", 3);
 
-let total = 0, parsedOk = 0;
-const errors: string[] = [];
-const intentCounts = new Map<string, number>();
-const seenPrompts = new Set<string>();
-let dupPrompts = 0;
-
-for (const objText of objects) {
-  let obj: any;
-  try {
-    obj = JSON.parse(objText.replace(/\n/g, "\\n"));
-  } catch {
-    // pretty-printed with real newlines inside strings from terminal wrapping:
-    // try stripping newlines + surrounding spaces instead
-    try {
-      obj = JSON.parse(objText.replace(/\n\s*/g, ""));
-    } catch {
-      continue;
-    }
+const raw = await readFile(file, "utf8");
+let objects: any[] = [];
+const lines = raw.split("\n").filter((l) => l.trim());
+if (lines.every((l) => l.trim().startsWith("{") && l.trim().endsWith("}"))) {
+  objects = lines.map((l) => JSON.parse(l));
+} else {
+  // pretty-printed objects: recover by brace matching
+  let depth = 0, start = -1, inStr = false, esc = false;
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw[i];
+    if (esc) { esc = false; continue; }
+    if (c === "\\") { esc = true; continue; }
+    if (c === '"') inStr = !inStr;
+    if (inStr) continue;
+    if (c === "{") { if (depth === 0) start = i; depth++; }
+    if (c === "}") { depth--; if (depth === 0 && start >= 0) { try { objects.push(JSON.parse(raw.slice(start, i + 1))); } catch { /* skip */ } start = -1; } }
   }
+}
+objects = objects.slice(SKIP);
+
+const count = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
+const ruleCounts = new Map<string, number>(), softCounts = new Map<string, number>(), formatCounts = new Map<string, number>();
+const examples = new Map<string, string[]>();
+const intents = new Map<string, number>(), actions = new Map<string, number>(), statuses = new Map<string, number>(), channels = new Map<string, number>();
+let total = 0, badJson = 0, badSchema = 0, rowsHard = 0, rowsSoft = 0, rowsFormat = 0, human = 0, prev2 = 0, dup = 0, noMeta = 0;
+const seen = new Set<string>();
+const bodyLens: number[] = [];
+
+for (const obj of objects) {
   if (!obj?.messages || obj.messages.length < 2) continue;
   total++;
   const user = String(obj.messages[0].content ?? "");
-  const asst = String(obj.messages[1].content ?? "");
-  if (seenPrompts.has(user)) dupPrompts++;
-  seenPrompts.add(user);
+  const asst = String(obj.messages.at(-1).content ?? "");
+  if (seen.has(user)) dup++;
+  seen.add(user);
+  const ch = /Channel: (\S+)/.exec(user)?.[1] ?? "?"; count(channels, ch);
+  const body = /Body:\n([\s\S]*?)\n"""/.exec(user)?.[1] ?? ""; bodyLens.push(body.length);
 
   let out: any;
-  try {
-    out = JSON.parse(asst);
-  } catch {
-    errors.push(`row ${total}: assistant not valid JSON: ${asst.slice(0, 80)}`);
-    continue;
-  }
+  try { out = JSON.parse(asst); } catch { badJson++; continue; }
   const v = RouterOutputSchema.safeParse(out);
-  if (!v.success) { errors.push(`row ${total}: schema fail: ${asst.slice(0, 100)}`); continue; }
-  parsedOk++;
-  intentCounts.set(out.intent, (intentCounts.get(out.intent) ?? 0) + 1);
+  if (!v.success) { badSchema++; count(ruleCounts, "schema_invalid"); (examples.get("schema_invalid") ?? examples.set("schema_invalid", []).get("schema_invalid")!).push(asst.slice(0, 140)); continue; }
+  const o = v.data;
+  count(intents, o.intent); count(actions, o.suggested_action);
+  if (o.needs_human) human++;
 
-  if (!ACTION_TABLE[out.intent as keyof typeof ACTION_TABLE].includes(out.suggested_action))
-    errors.push(`row ${total}: action ${out.suggested_action} not allowed for ${out.intent}`);
-  if ((out.suggested_action === "escalate_to_agent" || out.suggested_action === "escalate_to_billing") && !out.needs_human)
-    errors.push(`row ${total}: escalate without needs_human`);
-  if (out.suggested_action === "no_action" && out.needs_human)
-    errors.push(`row ${total}: no_action with needs_human`);
-  if (out.order_id !== null && !user.includes(out.order_id))
-    errors.push(`row ${total}: order_id ${out.order_id} not found in prompt`);
+  const a = auditRow(user, o);
+  if (!a.meta) noMeta++; else { count(statuses, a.meta.status); if (a.meta.prev >= 2) prev2++; }
+  const tag = (rule: string) => rule.split(":")[0];
+  for (const r of a.violations) { count(ruleCounts, tag(r)); const ex = examples.get(tag(r)) ?? []; if (ex.length < SHOW) ex.push(`${r} | ${o.intent}/${o.suggested_action}/h=${o.needs_human} | ${a.meta?.raw.replace(/\n/g, " ") ?? "no meta"} | ${body.slice(0, 90).replace(/\n/g, " ")}`); examples.set(tag(r), ex); }
+  for (const r of a.soft) { count(softCounts, r); const ex = examples.get(r) ?? []; if (ex.length < SHOW) ex.push(`${o.intent}/${o.suggested_action}/h=${o.needs_human} | ${a.meta?.raw.replace(/\n/g, " ") ?? "no meta"} | ${body.slice(0, 90).replace(/\n/g, " ")}`); examples.set(r, ex); }
+  for (const r of a.format) { count(formatCounts, tag(r)); const ex = examples.get(tag(r)) ?? []; if (ex.length < SHOW) ex.push(`${r} | ${user.slice(0, 160).replace(/\n/g, "\\n")}`); examples.set(tag(r), ex); }
+  if (a.violations.length) rowsHard++;
+  if (a.soft.length) rowsSoft++;
+  if (a.format.length) rowsFormat++;
 }
 
-console.log(`rows recovered: ${total}, schema-valid: ${parsedOk}, duplicate prompts: ${dupPrompts}`);
-console.log(`intent distribution: ${INTENTS.map((i) => `${i}=${intentCounts.get(i) ?? 0}`).join(" ")}`);
-if (errors.length) {
-  console.log(`ERRORS (${errors.length}):`);
-  for (const e of errors.slice(0, 25)) console.log(`  - ${e}`);
-} else {
-  console.log("no coherence errors");
-}
+const pct = (n: number) => `${((100 * n) / Math.max(1, total)).toFixed(1)}%`;
+const fmt = (m: Map<string, number>) => [...m.entries()].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}=${v}`).join(" ");
+bodyLens.sort((a, b) => a - b);
+console.log(`rows=${total} (skipped ${SKIP}) bad_json=${badJson} bad_schema=${badSchema} duplicate_prompts=${dup} no_metadata_block=${noMeta}`);
+console.log(`HARD violations: rows=${rowsHard} (${pct(rowsHard)})  ${fmt(ruleCounts) || "none"}`);
+console.log(`FORMAT issues:   rows=${rowsFormat} (${pct(rowsFormat)})  ${fmt(formatCounts) || "none"}`);
+console.log(`SOFT flags:      rows=${rowsSoft} (${pct(rowsSoft)})  ${fmt(softCounts) || "none"}`);
+console.log(`needs_human=${human}/${total} (${pct(human)}) prev>=2 rows=${prev2}`);
+console.log(`intents:  ${INTENTS.map((i) => `${i}=${intents.get(i) ?? 0}`).join(" ")}`);
+console.log(`actions:  ${ACTIONS.map((a) => `${a}=${actions.get(a) ?? 0}`).join(" ")}`);
+console.log(`statuses: ${fmt(statuses)}`);
+console.log(`channels: ${fmt(channels)}`);
+console.log(`body chars: p10=${bodyLens[Math.floor(bodyLens.length * 0.1)] ?? 0} p50=${bodyLens[Math.floor(bodyLens.length * 0.5)] ?? 0} p90=${bodyLens[Math.floor(bodyLens.length * 0.9)] ?? 0}`);
+for (const [rule, ex] of examples) { console.log(`--- ${rule} (${ruleCounts.get(rule) ?? softCounts.get(rule) ?? formatCounts.get(rule)})`); for (const e of ex) console.log(`    ${e}`); }
+console.log(`GATE: hard-violation rate ${pct(rowsHard)} over ${total} rows (hard rules: ${HARD_RULES.join(", ")})`);

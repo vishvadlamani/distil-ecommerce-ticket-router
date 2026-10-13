@@ -1,0 +1,36 @@
+generated rows: 10042
+per-intent actions:
+  account_access    escalate_to_agent=393 send_password_reset=188
+  billing_issue     answer_from_faq=475 escalate_to_billing=108
+  cancellation      cancel_order=312 escalate_to_agent=354
+  damaged_item      escalate_to_agent=71 send_replacement=643
+  delivery_issue    escalate_to_agent=68 open_carrier_investigation=748
+  exchange          escalate_to_agent=76 process_exchange=600
+  order_status      escalate_to_agent=516 send_tracking_link=1011
+  other             escalate_to_agent=825 no_action=574
+  product_question  answer_from_faq=414 escalate_to_agent=10
+  refund_status     escalate_to_agent=24 escalate_to_billing=846 send_refund_timeline=843
+  return_request    escalate_to_agent=256 send_return_label=294
+  sizing_fit        send_sizing_guide=393
+needs_human true share per intent: account_access=68% billing_issue=19% cancellation=53% damaged_item=10% delivery_issue=9% exchange=11% order_status=34% other=59% product_question=2% refund_status=51% return_request=47% sizing_fit=4%
+coverage: non_english~1382 (13.8%) all_caps~857 injection_like~690 (6.9%) no_subject=2529 (25.2%) emoji=577 seed_body_copies=0 duplicate_generated_bodies=34
+order_id: null=2483 from_text=5415 from_metadata=2131 | text-vs-metadata id conflicts: 340
+urgency: {1: 574, 2: 2967, 3: 2960, 4: 2943, 5: 598} | sentiment: {'neutral': 5215, 'frustrated': 3204, 'positive': 482, 'angry': 1141}
+cancellation by status: {('delivered', 'escalate_to_agent'): 8, ('in_transit', 'escalate_to_agent'): 151, ('processing', 'cancel_order'): 312, ('processing', 'escalate_to_agent'): 29, ('shipped', 'escalate_to_agent'): 166}
+return/exchange by window: {('<=35', 'escalate_to_agent'): 33, ('<=35', 'process_exchange'): 599, ('<=35', 'send_return_label'): 293, ('>35', 'escalate_to_agent'): 298, ('none', 'escalate_to_agent'): 1, ('none', 'process_exchange'): 1, ('none', 'send_return_label'): 1}
+order_status by status/days:
+  ?                none  send_tracking_link   1
+  delivered        <8d   send_tracking_link   1
+  delivered        >=8d  send_tracking_link   1
+  in_transit       <8d   escalate_to_agent    3
+  in_transit       <8d   send_tracking_link   258
+  in_transit       >=8d  escalate_to_agent    1
+  in_transit       >=8d  send_tracking_link   17
+  none             none  escalate_to_agent    1
+  processing       <8d   escalate_to_agent    6
+  processing       <8d   send_tracking_link   533
+  processing       >=8d  escalate_to_agent    501
+  shipped          <8d   escalate_to_agent    2
+  shipped          <8d   send_tracking_link   189
+  shipped          >=8d  escalate_to_agent    2
+  shipped          >=8d  send_tracking_link   11

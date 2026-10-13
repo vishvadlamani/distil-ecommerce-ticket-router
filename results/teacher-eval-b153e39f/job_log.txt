@@ -1,0 +1,7 @@
+2026/10/12 07:46:24 INFO mlflow.tracking.fluent: Experiment with name 'b4f609b2-865f-4e27-b9b2-ac37f06929ba' does not exist. Creating a new experiment.
+2026-10-12 07:46:24 INFO     Starting teacher evaluation for question-answering with zai.glm-5.3-low-thinking.
+2026-10-12 07:46:27 INFO     Using default tokenizer.
+Generating Model Results: 0it [00:00, ?it/s]Generating Model Results: 64it [00:07,  8.13it/s]
+2026-10-12 07:46:48 INFO     Evaluation complete, evaluation_metrics={'rouge': 0.928892605811264, 'binary': 0.609375, 'llm-as-a-judge': 0.734375, 'llm-as-a-judge-reference-free': 0.890625}
+2026-10-12 07:46:49 INFO     Teacher evaluation complete.
+

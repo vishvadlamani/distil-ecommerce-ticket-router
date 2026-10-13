@@ -1,0 +1,28 @@
+[GLM-5.3-low teacher] curated correct 22/24 = 91.7% [74.2, 97.7] | json 24/24 | intent 100.0% order_id 100.0% needs_human 91.7% urgency±1 100.0% action_ok 100.0% | platform judge 91.7%
+[GLM-5.3-low teacher] real    correct 25/40 = 62.5% [47.0, 75.8] | json 40/40 | intent 80.0% order_id 95.0% needs_human 85.0% urgency±1 87.5% action_ok 80.0% | platform judge 62.5%
+[GLM-5.3-low teacher] blended correct 47/64 = 73.4% [61.5, 82.7] | json 64/64 | intent 87.5% order_id 96.9% needs_human 87.5% urgency±1 92.2% action_ok 87.5% | platform judge 73.4%
+  pass #01 curated "Order stuck?": urgency 3 vs 4 (within 1)
+  pass #07 curated "Refund, third time asking": action escalate_to_agent vs escalate_to_billing (allowed)
+  pass #16 curated "screen on the digital frame arrived cracked right out of the": sentiment neutral vs frustrated
+  FAIL #17 curated "Received someone else's order": needs_human false vs true; action send_replacement vs escalate_to_agent (allowed)
+  FAIL #19 curated "Payment failing": needs_human true vs false; action escalate_to_billing vs answer_from_faq (allowed)
+  pass #21 curated "Reset link expired": urgency 3 vs 4 (within 1)
+  FAIL #24 real    "Hii i bought a psn card like 1 hour ago but the status still": action answer_from_faq vs send_tracking_link (not allowed for order_status)
+  FAIL #26 real    "I want the seriously annoying emails about items I have view": intent other vs account_access
+  pass #27 real    "Our Airstream Topper is amazingly comfy &amp; cooler than me": sentiment positive vs neutral
+  pass #36 real    "Wow Dept.: GMgr kept giving me 20 hours/week when I repeated": sentiment neutral vs frustrated
+  FAIL #38 real    "prev hd ordrd seinhzr earphones hd to replace, a strolley da": intent other vs damaged_item; needs_human false vs true; urgency 1 vs 3 (off by 2); action no_action vs escalate_to_agent (not allowed for damaged_item)
+  FAIL #39 real    "So @116245 have already taken my £45 for a game that doesn't": order_id @116245 vs null; action answer_from_faq vs send_tracking_link (not allowed for order_status)
+  FAIL #41 real    "Compré un #ajedrez  por @115821.Moderno,vino con 2 reinas y ": order_id 115821 vs null; needs_human false vs true; action send_replacement vs escalate_to_agent (allowed)
+  FAIL #43 real    "AMAZON IS THE COMPANY OF MOTHERFUCKERS, BUYERS NEED TO PAY F": needs_human false vs true; urgency 1 vs 2 (within 1); action no_action vs escalate_to_agent (allowed)
+  FAIL #45 real    "your garbage service can't even deliver a package when I got": needs_human false vs true; urgency 2 vs 4 (off by 2); action answer_from_faq vs escalate_to_agent (not allowed for order_status)
+  FAIL #49 real    "The sound quality of The Deer Hunter on Amazon Prime on the ": intent other vs product_question; urgency 1 vs 2 (within 1); action no_action vs answer_from_faq (not allowed for product_question)
+  FAIL #50 real    "Your Filipino call centers are THE GATES OF HELL!  FIVE HOUR": urgency 2 vs 4 (off by 2)
+  FAIL #51 real    "- and the chicken is a little pink 😱 #salmonella https://t.": intent other vs damaged_item; urgency 2 vs 4 (off by 2)
+  FAIL #53 real    "Have issues with subtitles being out of sync for Prime video": intent other vs product_question; urgency 1 vs 2 (within 1); action no_action vs answer_from_faq (not allowed for product_question)
+  FAIL #57 real    "need help 2 cancel Sling tv from my fire stick, moving and n": intent other vs cancellation; needs_human true vs false; urgency 2 vs 3 (within 1); action escalate_to_agent vs cancel_order (allowed)
+  pass #58 real    "who are the winners of #amazonsaletrail contest held on app ": sentiment neutral vs frustrated
+  FAIL #59 real    "Hey @Tesco U ok Hun? paid £3 for a meal deal and ended up wi": intent other vs damaged_item; sentiment angry vs frustrated; urgency 1 vs 3 (off by 2); action no_action vs send_replacement (not allowed for damaged_item)
+  FAIL #61 real    "bought work out clothes wrong size on Wed. 7/19 lost receipt": needs_human false vs true; action process_exchange vs escalate_to_agent (allowed)
+  FAIL #62 real    "When you traying to paly debt to @115937 @AskeBay  "Sorry, w": intent other vs billing_issue; sentiment neutral vs frustrated; urgency 1 vs 2 (within 1); action no_action vs answer_from_faq (not allowed for billing_issue)
+  pass #63 real    "Appalled with the way things have turned out. eBay did not c": sentiment angry vs frustrated
