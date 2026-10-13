@@ -373,3 +373,15 @@ run follows. Things we hit that belong in those docs or in the platform:
   (`release/0.6b/MODEL_CARD.md`, measured numbers only). Target repo `vishinvents/distil-qwen3-0.6b-ecom-ticket-router`.
 - Blocked: no HF_TOKEN in this environment. `release/0.6b/release.sh` reproduces every step from the platform download
   and publishes with `scripts/publish_hf.py` (README uploaded last) once HF_TOKEN is set as an environment secret.
+
+### Demo deployment of the 0.6B (2026-10-13 07:33 UTC, user-approved)
+
+- `distil deployment create-from-slm --output json fc8a659a-...` -> **Deployment efd698b1-bdf6-48a9-bab5-e124df8e7a4b**, JOB_SUCCESS and
+  endpoint_status running after 282 s. 1 `deployments_from_slms_post` credit (14 left); $1/h while up; the platform
+  stops it after 1 h idle or 6 h total and it cannot be restarted (a permanent endpoint needs an inference-endpoint
+  credit, which the user will request from Jacek).
+- Endpoint: `https://ta-01m4t2zsbcqw543hhmyd1dkn2s-8000-q08040nqqzu57wnhkuk5w4cn2.w.modal.host/` (OpenAI-compatible under /v1, model name `model`; the untrained base answers as `base`); the
+  key comes from `GET https://api.distillabs.ai/deployments/efd698b1-bdf6-48a9-bab5-e124df8e7a4b/endpoint` with a `distil access-token` bearer, or
+  from the platform's inference playground. Not recorded here.
+- Smoke test: a delivered-but-missing ticket (AC-92831, delivered 6 d) through the endpoint with the trained system
+  prompt, temperature 0, thinking off -> see the chat transcript for the decision; one request, valid JSON.
