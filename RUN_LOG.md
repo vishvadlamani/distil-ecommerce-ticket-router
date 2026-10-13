@@ -357,3 +357,19 @@ run follows. Things we hit that belong in those docs or in the platform:
 - Feedback list for distil labs (above) gained: (10) deployments came up in 4.5 to 7 min; (11) the $1/h tier is a slower
   GPU than the $3/h tier (p50 3.2 s vs 0.9 s at 8 in flight), worth a line in the pricing docs; (12) the untrained base
   served as `base` on the same deployment is a free, like-for-like untrained baseline the docs could mention.
+
+### Hugging Face release of the 0.6B (2026-10-13 07:23 to 07:31 UTC, upload pending a token)
+
+- `distil slm download fc8a659a-...`: model.tar = LoRA adapter only (rank 64 on q_proj/v_proj, 36.7 MB, base
+  `Qwen/Qwen3-0.6B`, peft 0.21.2) + tokenizer + chat_template.jinja + model_client.py + licenses (Apache 2.0 student,
+  MIT teacher). No merged weights this round.
+- Merged locally on CPU (torch 2.14 cpu, transformers 5.19, peft 0.21.2): 596.0M params, bf16 safetensors 1.19 GB, 17 s.
+  `tokenizer_config.json`: removed the 13-entry `extra_special_tokens` list (the August transformers crash).
+- Verification: merged model with the trained system prompt, greedy, thinking off, reproduces the platform's
+  predictions on 8/8 sampled test rows (0,1,10,20,33,44,50,60).
+- GGUF: llama.cpp `convert_hf_to_gguf.py --outtype f16` -> 1.20 GB, 310 tensors. Modelfile = the August Qwen3 template
+  with temperature 0.1.
+- Release folder (2.3 GB): merged/, adapter/, the GGUF, Modelfile, model_client.py, licenses, model card
+  (`release/0.6b/MODEL_CARD.md`, measured numbers only). Target repo `vishinvents/distil-qwen3-0.6b-ecom-ticket-router`.
+- Blocked: no HF_TOKEN in this environment. `release/0.6b/release.sh` reproduces every step from the platform download
+  and publishes with `scripts/publish_hf.py` (README uploaded last) once HF_TOKEN is set as an environment secret.
