@@ -1,0 +1,14 @@
+rows=148 (skipped 115) bad_json=0 bad_schema=0 duplicate_prompts=0 no_metadata_block=1
+HARD violations: rows=0 (0.0%)  none
+FORMAT issues:   rows=2 (1.4%)  prompt_template_mismatch=2
+SOFT flags:      rows=0 (0.0%)  none
+needs_human=47/148 (31.8%) prev>=2 rows=14
+intents:  order_status=29 delivery_issue=9 return_request=9 refund_status=14 exchange=10 cancellation=11 product_question=8 sizing_fit=10 damaged_item=13 billing_issue=7 account_access=10 other=18
+actions:  send_tracking_link=21 open_carrier_investigation=7 send_return_label=4 send_refund_timeline=5 process_exchange=10 cancel_order=5 answer_from_faq=14 send_sizing_guide=10 send_replacement=12 escalate_to_billing=10 send_password_reset=0 escalate_to_agent=37 no_action=13
+statuses: none=40 delivered=38 processing=28 shipped=19 refund_initiated=8 in_transit=8 returned=6
+channels: email=71 chat=52 contact_form=25
+body chars: p10=76 p50=231 p90=443
+--- prompt_template_mismatch (2)
+    prompt_template_mismatch | Ticket:\n""\nSubject: retour et remboursement\nChannel: email\nBody:\nbonjour j'ai commandé des bottines il y a environ 40 jours (commande #48213) et elles sont trop
+    prompt_template_mismatch | Ticket:\n"""\nSubject: Quick question about my order\nChannel: email\nBody:\nHi, so I ordered a set of ceramic mixing bowls last Tuesday, the pastel ones, and honest
+GATE: hard-violation rate 0.0% over 148 rows (hard rules: action_table, escalate_without_human, no_action_with_human, prev2_without_human, order_id_not_verbatim, post_ship_cancel_not_escalated, out_of_window_not_escalated, stuck_processing_not_escalated, delivery_issue_while_processing)

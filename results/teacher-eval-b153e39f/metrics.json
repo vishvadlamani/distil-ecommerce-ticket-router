@@ -1,0 +1,8 @@
+{
+  "teacher_performance": {
+    "rouge": 0.9288926058,
+    "binary": 0.609375,
+    "llm-as-a-judge": 0.734375,
+    "llm-as-a-judge-reference-free": 0.890625
+  }
+}

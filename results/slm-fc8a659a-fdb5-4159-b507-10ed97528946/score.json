@@ -1,0 +1,84 @@
+{
+  "name": "tuned Qwen3-0.6B",
+  "file": "results/slm-fc8a659a-fdb5-4159-b507-10ed97528946/predictions.jsonl",
+  "n_predictions": 64,
+  "unmatched": 0,
+  "missing": [],
+  "slices": {
+    "curated": {
+      "n": 24,
+      "n_expected": 24,
+      "pass": 23,
+      "p": 0.9583333333333334,
+      "lo": 0.7975819334115467,
+      "hi": 0.9926065439164028,
+      "json_valid": 24,
+      "platform_judge_mean": 0.9583333333333334,
+      "fields": {
+        "n": "24",
+        "schema": "100.0%",
+        "intent": "95.8%",
+        "order_id": "100.0%",
+        "needs_human": "100.0%",
+        "sentiment": "95.8%",
+        "urgency_within1": "95.8%",
+        "action_allowed": "95.8%",
+        "judge_pass": "95.8%"
+      },
+      "latency_p50": null,
+      "latency_p95": null,
+      "in_tok": 0,
+      "out_tok": 0
+    },
+    "real": {
+      "n": 40,
+      "n_expected": 40,
+      "pass": 24,
+      "p": 0.6,
+      "lo": 0.44595893542800863,
+      "hi": 0.7365167440802984,
+      "json_valid": 40,
+      "platform_judge_mean": 0.6,
+      "fields": {
+        "n": "40",
+        "schema": "100.0%",
+        "intent": "72.5%",
+        "order_id": "100.0%",
+        "needs_human": "75.0%",
+        "sentiment": "72.5%",
+        "urgency_within1": "85.0%",
+        "action_allowed": "87.5%",
+        "judge_pass": "60.0%"
+      },
+      "latency_p50": null,
+      "latency_p95": null,
+      "in_tok": 0,
+      "out_tok": 0
+    },
+    "blended": {
+      "n": 64,
+      "n_expected": 64,
+      "pass": 47,
+      "p": 0.734375,
+      "lo": 0.6151712617161998,
+      "hi": 0.8270362098609046,
+      "json_valid": 64,
+      "platform_judge_mean": 0.734375,
+      "fields": {
+        "n": "64",
+        "schema": "100.0%",
+        "intent": "81.3%",
+        "order_id": "100.0%",
+        "needs_human": "84.4%",
+        "sentiment": "81.3%",
+        "urgency_within1": "89.1%",
+        "action_allowed": "90.6%",
+        "judge_pass": "73.4%"
+      },
+      "latency_p50": null,
+      "latency_p95": null,
+      "in_tok": 0,
+      "out_tok": 0
+    }
+  }
+}

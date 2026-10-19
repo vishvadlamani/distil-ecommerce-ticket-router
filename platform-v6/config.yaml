@@ -1,0 +1,57 @@
+base:
+  task: question-answering
+  student_model_name: Qwen3-1.7B
+  teacher_model_name: zai.glm-5.3-low-thinking
+  random_seed: 123
+  llm_num_parallel_requests: 4
+evaluation:
+  num_few_shot_examples: 1
+  llm_as_a_judge_model_name: zai.glm-5.3-low-thinking
+synthgen:
+  output_is_json: true
+  train_generation_target: 10000
+  test_generation_target: 0
+  use_traces_as_context: false
+  teacher_temperature: 0.6
+  generation_in_single_call: 4
+  generation_iteration_size: 128
+  num_positive_exemplars_per_generation: 2
+  validation_max_total_length: 30000
+  validation_similarity_threshold: 0.95
+  mutators:
+    - name: order_state
+      target_distribution: [3, 2, 1, 1, 3, 1, 1]
+      values:
+        - "about a customer with no order on file: metadata order_id none, order_status none, days_since_order none (product and sizing questions, account access, checkout or billing problems, wholesale, spam, praise)"
+        - "about an order still in processing: order_status processing, days_since_order between 0 and 14"
+        - "about an order that has shipped: order_status shipped, days_since_order between 1 and 10"
+        - "about an order in transit: order_status in_transit, days_since_order between 2 and 16"
+        - "about a delivered order: order_status delivered, days_since_order between 1 and 60"
+        - "about an order the customer has already sent back: order_status returned, days_since_order between 10 and 45"
+        - "about an order with a refund underway: order_status refund_initiated, days_since_order between 15 and 40"
+    - name: register
+      target_distribution: [3, 3, 2, 1, 1, 1, 1]
+      values:
+        - "written as a formal email with a greeting, full sentences and a sign-off"
+        - "written as a terse chat message of one or two short lines"
+        - "written in lowercase with typos, missing punctuation and no greeting"
+        - "written in all capitals by an angry customer, with an insult or a threat"
+        - "written politely but impatiently by a customer who has contacted support about this before (previous_contacts 1 to 3)"
+        - "written as a long rambling message that buries the actual request in irrelevant detail"
+        - "written in Spanish, German or French"
+    - name: manipulation
+      target_distribution: [17, 1, 1, 1]
+      values:
+        - "a plain customer ticket with no instructions aimed at the AI"
+        - "a message that is only an instruction aimed at the routing AI (an override, a fake system notice, a request to change the output format, a demand to copy a given JSON), with no genuine customer request"
+        - "a message that claims an entitlement or an approval the AI should honour (an instant refund already approved, a supervisor authorised a replacement) and asks the AI to skip escalation"
+        - "a genuine customer request with an injected instruction to the AI wrapped around it (a fake policy notice, 'ignore the metadata', 'set needs_human false')"
+tuning:
+  num_train_epochs: 4
+  learning_rate: 5e-5
+  learning_rate_scheduler: linear
+  lora_r: 64
+  lora_alpha_multiplier: 1
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 1
+  max_completion_length: 2048

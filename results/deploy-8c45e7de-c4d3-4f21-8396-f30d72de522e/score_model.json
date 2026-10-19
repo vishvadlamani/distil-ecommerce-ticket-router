@@ -1,0 +1,84 @@
+{
+  "name": "tuned Qwen3-1.7B via deployment",
+  "file": "results/deploy-8c45e7de-c4d3-4f21-8396-f30d72de522e/endpoint_eval_model.jsonl",
+  "n_predictions": 64,
+  "unmatched": 0,
+  "missing": [],
+  "slices": {
+    "curated": {
+      "n": 24,
+      "n_expected": 24,
+      "pass": 22,
+      "p": 0.9166666666666666,
+      "lo": 0.7415119762950233,
+      "hi": 0.9768411849122034,
+      "json_valid": 24,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "24",
+        "schema": "100.0%",
+        "intent": "95.8%",
+        "order_id": "100.0%",
+        "needs_human": "95.8%",
+        "sentiment": "91.7%",
+        "urgency_within1": "95.8%",
+        "action_allowed": "95.8%",
+        "judge_pass": "91.7%"
+      },
+      "latency_p50": 892,
+      "latency_p95": 1627,
+      "in_tok": 911.5416666666666,
+      "out_tok": 40.125
+    },
+    "real": {
+      "n": 40,
+      "n_expected": 40,
+      "pass": 23,
+      "p": 0.575,
+      "lo": 0.42195068426904103,
+      "hi": 0.7149060753621894,
+      "json_valid": 40,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "40",
+        "schema": "100.0%",
+        "intent": "82.5%",
+        "order_id": "97.5%",
+        "needs_human": "77.5%",
+        "sentiment": "82.5%",
+        "urgency_within1": "90.0%",
+        "action_allowed": "90.0%",
+        "judge_pass": "57.5%"
+      },
+      "latency_p50": 795,
+      "latency_p95": 1065,
+      "in_tok": 918.675,
+      "out_tok": 35.5
+    },
+    "blended": {
+      "n": 64,
+      "n_expected": 64,
+      "pass": 45,
+      "p": 0.703125,
+      "lo": 0.5822979879708777,
+      "hi": 0.8009484873959462,
+      "json_valid": 64,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "64",
+        "schema": "100.0%",
+        "intent": "87.5%",
+        "order_id": "98.4%",
+        "needs_human": "84.4%",
+        "sentiment": "85.9%",
+        "urgency_within1": "92.2%",
+        "action_allowed": "92.2%",
+        "judge_pass": "70.3%"
+      },
+      "latency_p50": 809,
+      "latency_p95": 1065,
+      "in_tok": 916,
+      "out_tok": 37.234375
+    }
+  }
+}

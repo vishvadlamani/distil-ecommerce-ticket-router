@@ -9,7 +9,12 @@
     "eval": "bun scripts/eval.ts --model ecom-router-1.7b-v5",
     "eval-real": "bun scripts/eval_real.ts --model ecom-router-1.7b-v5",
     "repair-data": "bun scripts/repair_training_data.ts",
-    "build-v5-dataset": "bun scripts/build_v5_dataset.ts"
+    "build-v5-dataset": "bun scripts/build_v5_dataset.ts",
+    "build-v6-seeds": "bun scripts/build_v6_seeds.ts",
+    "check-sample": "bun scripts/check_sample.ts",
+    "score": "bun scripts/score_predictions.ts",
+    "eval-external": "bun scripts/eval_external.ts",
+    "throughput": "bun scripts/throughput_sweep.ts"
   },
   "dependencies": {
     "zod": "^3.23.8"

@@ -1,0 +1,14 @@
+{
+  "base_model_performance": {
+    "rouge": 0.8309683448,
+    "binary": 0,
+    "llm-as-a-judge": 0.328125,
+    "llm-as-a-judge-reference-free": 0.375
+  },
+  "tuned_model_performance": {
+    "rouge": 0.9256931016,
+    "binary": 0.65625,
+    "llm-as-a-judge": 0.703125,
+    "llm-as-a-judge-reference-free": 0.8125
+  }
+}

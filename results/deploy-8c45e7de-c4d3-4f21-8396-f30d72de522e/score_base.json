@@ -1,0 +1,84 @@
+{
+  "name": "untrained Qwen3-1.7B via deployment",
+  "file": "results/deploy-8c45e7de-c4d3-4f21-8396-f30d72de522e/endpoint_eval_base.jsonl",
+  "n_predictions": 64,
+  "unmatched": 0,
+  "missing": [],
+  "slices": {
+    "curated": {
+      "n": 24,
+      "n_expected": 24,
+      "pass": 8,
+      "p": 0.3333333333333333,
+      "lo": 0.1797219023644938,
+      "hi": 0.5329368331526154,
+      "json_valid": 24,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "24",
+        "schema": "100.0%",
+        "intent": "70.8%",
+        "order_id": "91.7%",
+        "needs_human": "54.2%",
+        "sentiment": "41.7%",
+        "urgency_within1": "83.3%",
+        "action_allowed": "79.2%",
+        "judge_pass": "33.3%"
+      },
+      "latency_p50": 659,
+      "latency_p95": 842,
+      "in_tok": 911.5416666666666,
+      "out_tok": 52.166666666666664
+    },
+    "real": {
+      "n": 40,
+      "n_expected": 40,
+      "pass": 15,
+      "p": 0.375,
+      "lo": 0.24222979078963872,
+      "hi": 0.5296756098249772,
+      "json_valid": 38,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "40",
+        "schema": "95.0%",
+        "intent": "52.5%",
+        "order_id": "95.0%",
+        "needs_human": "70.0%",
+        "sentiment": "60.0%",
+        "urgency_within1": "75.0%",
+        "action_allowed": "75.0%",
+        "judge_pass": "37.5%"
+      },
+      "latency_p50": 584,
+      "latency_p95": 669,
+      "in_tok": 918.675,
+      "out_tok": 44.825
+    },
+    "blended": {
+      "n": 64,
+      "n_expected": 64,
+      "pass": 23,
+      "p": 0.359375,
+      "lo": 0.25288402217722405,
+      "hi": 0.4817914948765132,
+      "json_valid": 62,
+      "platform_judge_mean": null,
+      "fields": {
+        "n": "64",
+        "schema": "96.9%",
+        "intent": "59.4%",
+        "order_id": "93.8%",
+        "needs_human": "64.1%",
+        "sentiment": "53.1%",
+        "urgency_within1": "78.1%",
+        "action_allowed": "76.6%",
+        "judge_pass": "35.9%"
+      },
+      "latency_p50": 597,
+      "latency_p95": 747,
+      "in_tok": 916,
+      "out_tok": 47.578125
+    }
+  }
+}

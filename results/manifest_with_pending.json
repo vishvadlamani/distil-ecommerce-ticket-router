@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Untrained Qwen3-1.7B",
+    "file": "results/deploy-8c45e7de-c4d3-4f21-8396-f30d72de522e/endpoint_eval_base.jsonl",
+    "cost_note": "same endpoint as the tuned 1.7B"
+  },
+  {
+    "name": "Untrained Qwen3-0.6B",
+    "file": "results/deploy-791a667a-78b3-4ecb-9e63-d96bcf711db4/endpoint_eval_base.jsonl",
+    "cost_note": "same endpoint as the tuned 0.6B"
+  },
+  {
+    "name": "Teacher: GLM 5.3 low-thinking (platform)",
+    "file": "results/teacher-eval-b153e39f/predictions.jsonl",
+    "cost_note": "hosted teacher, no per-call price"
+  },
+  {
+    "name": "GPT-5.6 Luna (API)",
+    "file": null,
+    "cost_note": "not run: no OPENAI_API_KEY; list price $0.20 in / $1.20 out per 1M tokens"
+  },
+  {
+    "name": "Gemini 3.5 Flash-Lite (API)",
+    "file": null,
+    "cost_note": "not run: no GEMINI_API_KEY; list price $0.30 in / $2.50 out per 1M tokens"
+  },
+  {
+    "name": "Tuned Qwen3-1.7B",
+    "file": "results/slm-c1fa3d30-475a-4436-bbca-8833d178563f/predictions.jsonl",
+    "latency_file": "results/deploy-8c45e7de-c4d3-4f21-8396-f30d72de522e/endpoint_eval_model.jsonl",
+    "cost_per_1000": 0.0083,
+    "cost_note": "$3/h GPU at 101.01 rps, 128 in flight, not yet plateaued"
+  },
+  {
+    "name": "Tuned Qwen3-0.6B",
+    "file": "results/slm-fc8a659a-fdb5-4159-b507-10ed97528946/predictions.jsonl",
+    "latency_file": "results/deploy-791a667a-78b3-4ecb-9e63-d96bcf711db4/endpoint_eval_model.jsonl",
+    "cost_per_1000": 0.0047,
+    "cost_note": "$1/h GPU at 59.32 rps, 512 in flight, plateau"
+  }
+]
