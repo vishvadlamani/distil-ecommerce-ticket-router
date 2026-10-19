@@ -1,6 +1,6 @@
 # Ecommerce Support Ticket Router
 
-Small fine-tuned Qwen3 models that read a support ticket plus light order metadata and emit one routable JSON object. Trained on the [Distil Labs](https://www.distillabs.ai) platform. Round 2 (October 2026) is platform-native: the contract's rules live in the platform's data generation instructions, the 10,042 generated tickets were trained on as generated, and the 0.6B student matches its GLM 5.3 teacher on the 64-row held-out test at $0.0047 per 1,000 tickets on the platform's $1/hour GPU. Round 1 (August 2026) is kept below for reference; its weights are public at [vishinvents/distil-qwen3-1.7b-ecom-ticket-router](https://huggingface.co/vishinvents/distil-qwen3-1.7b-ecom-ticket-router).
+Small fine-tuned Qwen3 models that read a support ticket plus light order metadata and emit one routable JSON object. Trained on the [Distil Labs](https://www.distillabs.ai) platform. Round-2 weights: [vishinvents/distil-qwen3-0.6b-ecom-ticket-router](https://huggingface.co/vishinvents/distil-qwen3-0.6b-ecom-ticket-router) (merged safetensors, LoRA adapter, f16 GGUF, Modelfile). Round 2 (October 2026) is platform-native: the contract's rules live in the platform's data generation instructions, the 10,042 generated tickets were trained on as generated, and the 0.6B student matches its GLM 5.3 teacher on the 64-row held-out test at $0.0047 per 1,000 tickets on the platform's $1/hour GPU. Round 1 (August 2026) is kept below for reference; its weights are public at [vishinvents/distil-qwen3-1.7b-ecom-ticket-router](https://huggingface.co/vishinvents/distil-qwen3-1.7b-ecom-ticket-router).
 
 Every ticket in, one object out:
 
@@ -81,7 +81,7 @@ Round 2 is platform-native, with no repair script and no hand-written patch rows
 
 ## Limitations
 
-English-first: the model answers non-English tickets in valid JSON but with reduced accuracy. Raw social-media messages without order metadata sit outside the training distribution; accuracy there is 57.5 to 60 percent against the teacher's 62.5, and the misses are largely the teacher's own. Both students still route "any update on my delivery? nothing has arrived yet" on a delivered order as a status question; it is the first seed for round 3. The 1.7B's throughput plateau was not reached in the sweep, so its cost figure is an upper bound. The mid-size API baselines are pending keys.
+English-first: the model answers non-English tickets in valid JSON but with reduced accuracy. Raw social-media messages without order metadata sit outside the training distribution; accuracy there is 57.5 to 60 percent against the teacher's 62.5, and the misses are largely the teacher's own. Both students still route "any update on my delivery? nothing has arrived yet" on a delivered order as a status question; it is the first seed for round 3. The 1.7B's throughput plateau was not reached in the sweep, so its cost figure is an upper bound. The mid-size API baselines are pending keys. Hand-off package for distil labs: [HANDOFF.md](HANDOFF.md).
 
 ## Round 1 (August 2026), for reference
 
