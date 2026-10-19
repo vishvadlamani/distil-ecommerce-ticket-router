@@ -38,6 +38,7 @@ API list prices for the same ticket shape (about 1,100 input and 60 output token
 | Teacher evaluation | `results/teacher-eval-b153e39f/` (metrics, predictions, score with misses, job log) |
 | Trained students | `results/slm-c1fa3d30-…/` (1.7B) and `results/slm-fc8a659a-…/` (0.6B): platform metrics, predictions, local score with misses, `metadata/model_client.py` |
 | Deployments and sweeps | `results/deploy-8c45e7de-…/` (1.7B) and `results/deploy-791a667a-…/` (0.6B): endpoint evals of tuned and untrained, sweep logs |
+| Live endpoint check (19 Oct) | `results/deploy-ebe71dae-…/`: the 64-row test through the live deployment, with per-row misses |
 | Results table | `results/RESULTS.md` (built by `scripts/results_table.ts` from `results/manifest.json`) |
 | Hugging Face model card for the 0.6B | `release/0.6b/MODEL_CARD.md`; publish with `release/0.6b/release.sh` (needs `HF_TOKEN`); target `vishinvents/distil-qwen3-0.6b-ecom-ticket-router` |
 | Blog post (rewritten around round 2) | `content/ecommerce-ticket-router-blog.md` in `vishvadlamani/distil-models`, PR [#1](https://github.com/vishvadlamani/distil-models/pull/1) |
@@ -57,8 +58,9 @@ API list prices for the same ticket shape (about 1,100 input and 60 output token
 | SLM Qwen3-0.6B (the one to ship) | `fc8a659a-fdb5-4159-b507-10ed97528946` |
 | Deployments used for the sweeps | `8c45e7de-c4d3-4f21-8396-f30d72de522e` (1.7B), `791a667a-78b3-4ecb-9e63-d96bcf711db4` (0.6B), both deleted after measurement |
 | Demo deployment (13 Oct) | `efd698b1-bdf6-48a9-bab5-e124df8e7a4b`, stopped by the platform's session limit |
+| **Live deployment (19 Oct 12:21 UTC)** | `ebe71dae-e576-44f7-be7a-1211c229bf39`, endpoint `https://ta-01m5a1r4degkkfwyxtdh9t5eys-8000-4g5mej9g388rmylcdzr9hijwv.w.modal.host/v1` (OpenAI-compatible, model name `model`, untrained base as `base`; key from the endpoint route below). Serving after 240 s; the 64-row test through it scored 50/64 (23/24, 27/40), inside the same interval as the platform's 47/64. The platform stops it after 1 h idle or 6 h total. |
 
-To put the 0.6B behind a live endpoint again: `distil deployment create-from-slm fc8a659a-fdb5-4159-b507-10ed97528946`, about five minutes to serving; the direct URL and key come from `GET https://api.distillabs.ai/deployments/<id>/endpoint`. For a permanent endpoint this account needs an `inference_endpoints_post` credit and a permanent primary.
+When the live deployment has stopped, the same model comes back with `distil deployment create-from-slm fc8a659a-fdb5-4159-b507-10ed97528946`, about four to five minutes to serving; the direct URL and key come from `GET https://api.distillabs.ai/deployments/<id>/endpoint`. For a permanent endpoint this account needs an `inference_endpoints_post` credit and a permanent primary.
 
 ## Open items
 

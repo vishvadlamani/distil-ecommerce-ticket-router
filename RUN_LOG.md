@@ -396,3 +396,24 @@ run follows. Things we hit that belong in those docs or in the platform:
   repo and the Ollama path; new `content/ecommerce-ticket-router-social.md`; the two September proposals revised as
   Markdown beside their PDFs with round-2 numbers.
 - Still blocked on secrets: HF_TOKEN (upload), OPENAI_API_KEY and GEMINI_API_KEY (two baseline rows).
+
+### Live deployment for the hand-off (2026-10-19 12:20 UTC, user-approved)
+
+- `distil auth` (device code HVSW-MFMX, confirmed by the user at 12:20:34); signed in as vish@safe.app.
+- `distil deployment create-from-slm --output json fc8a659a-...` at 12:20:52 -> **Deployment ebe71dae-e576-44f7-be7a-1211c229bf39**,
+  JOB_PENDING at 20 s, JOB_RUNNING from 40 s, JOB_SUCCESS with endpoint_status running at 240 s.
+  1 `deployments_from_slms_post` credit (13 left; after this run: datasets_post 4, generate 4, smoke 17,
+  teacher_evaluations 3, slms_from_datasets 3, inference_endpoints 0). Same session limit as the demo: stopped after
+  1 h idle or 6 h total, not restartable.
+- Endpoint: `https://ta-01m5a1r4degkkfwyxtdh9t5eys-8000-4g5mej9g388rmylcdzr9hijwv.w.modal.host/v1` (model `model`,
+  untrained base `base`); key from `GET https://api.distillabs.ai/deployments/ebe71dae-e576-44f7-be7a-1211c229bf39/endpoint`.
+  Not recorded here.
+- Probe without the system prompt (my mistake, first attempt): the model answers in prose, 15 s. With the trained system
+  prompt from `metadata/model_client.py`: the delivered-but-missing ticket (AC-92831, delivered 6 d) ->
+  `delivery_issue / open_carrier_investigation / urgency 4 / needs_human false`, valid JSON, 5.2 s cold.
+- `bun scripts/endpoint_eval.ts --model model --concurrency 4` over the 64 test rows ->
+  `results/deploy-ebe71dae-.../endpoint_eval_model.jsonl`, 0 errors, p50 3.15 s, p95 5.02 s at 4 in flight.
+  Score (`score_model.txt`): curated 23/24, real 27/40, blended **50/64** (78.1%, 66.6–86.5), JSON 64/64.
+  Third measurement of the same adapter at temperature 0: platform predictions 47/64, endpoint re-run on 13 Oct
+  49/64, live endpoint 50/64. The rows that move are the borderline real-slice tickets; all three sit inside one
+  22-point interval, so the published number stays 47/64 ("matches the teacher").
