@@ -385,3 +385,14 @@ run follows. Things we hit that belong in those docs or in the platform:
   from the platform's inference playground. Not recorded here.
 - Smoke test: a delivered-but-missing ticket (AC-92831, delivered 6 d) through the endpoint with the trained system
   prompt, temperature 0, thinking off -> see the chat transcript for the decision; one request, valid JSON.
+
+### Hand-off package (2026-10-19, no platform jobs)
+
+- No new platform ids. The distil CLI session has expired (`distil auth` needed before any new job) and the demo
+  deployment efd698b1-... is stopped by the platform's session limit; the SLM fc8a659a-... is unchanged and redeployable.
+- Added `HANDOFF.md` (summary, tables, package map, every id, redeploy command, open items, feedback) and linked it and
+  the 0.6B Hugging Face target from the README; commit 1d5a8a3 on `round2-platform-native`, PR #1 body updated.
+- In `vishvadlamani/distil-models` (commit 5aae900 on `claude/charming-pascal-a32gey`, PR #1): blog links the 0.6B HF
+  repo and the Ollama path; new `content/ecommerce-ticket-router-social.md`; the two September proposals revised as
+  Markdown beside their PDFs with round-2 numbers.
+- Still blocked on secrets: HF_TOKEN (upload), OPENAI_API_KEY and GEMINI_API_KEY (two baseline rows).
